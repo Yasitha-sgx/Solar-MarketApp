@@ -1,25 +1,21 @@
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default ({ mode }) => {
-  process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
 
-  const baseUrl = process.env.VITE_SERVER_URL;
+  optimizeDeps: {
+    exclude: ["js-big-decimal"],
+  },
 
-  return defineConfig({
-    plugins: [react()],
-
-    optimizeDeps: {
-      exclude: ["js-big-decimal"],
-    },
-
-    server: {
-      proxy: {
-        "/api": {
-          target: baseUrl,
-          changeOrigin: true,
-        },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+        secure: false,
       },
     },
-  });
-};
+  },
+});
