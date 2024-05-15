@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply bg-white;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-[#E45416] rounded-lg;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[#BA552A];
+}
+
+* > * {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+SELECT {
+  background: url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='%23000000' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>")
+    no-repeat;
+  background-position: calc(100% - 0.75rem) center !important;
+  -moz-appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  padding-right: 2rem !important;
+}
+
+a {
+  @apply text-[#585A6D];
+}
+
+a:hover {
+  @apply text-[#EE723C];
+}
+
+a.active {
+  @apply text-[#E45416];
+}
+
+.btn-fill {
+  @apply bg-[#E45416] hover:bg-[#EE723C]  rounded-[37px] text-[#ffffff] disabled:bg-[#EE723C];
+}
+
+.btn-outline {
+  @apply outline  outline-[#EE723C]  rounded-[37px] text-[#EE723C];
+}
+
+.input {
+  @apply border border-[#CEDBF0] rounded-[4px] focus:outline-[#EE723C] text-[14px] p-2;
+}
+
+.lbl-txt {
+  @apply text-[14px] text-[#141920] text-[14px];
+}
+
+.rqt-frm-select {
+  @apply px-[12px] py-[9px] rounded-[4px] border-[1px] border-[#CEDBF0] text-[14px] cursor-pointer;
+}
