@@ -103,7 +103,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-10 shadow-md bg-[#ffffff] w-[100%]">
-      <nav className="items-center justify-between text-sm w-[80%] h-[50px] mx-auto py-8 hidden md:flex">
+      <nav className="items-center justify-between text-sm w-full max-w-screen-lg  p-8 px-8 h-[50px] py-8 hidden md:flex mx-auto">
         {/* Desktop Menu */}
         <div className="flex items-center md:gap-12 lg:gap-20">
           <div>
@@ -177,7 +177,7 @@ const Header = () => {
       </nav>
 
       {/* Mobile Menu */}
-      <nav className="flex items-center justify-between text-sm w-[85%] h-[50px] mx-auto py-8 md:hidden">
+      <nav className="flex items-center justify-between text-sm w-full max-w-screen-lg  p-4 sm:p-8 h-[50px] mx-auto py-8 md:hidden">
         <div className="flex items-center gap-20">
           <div>
             <NavLink to="/" onClick={handleMenuClick}>
