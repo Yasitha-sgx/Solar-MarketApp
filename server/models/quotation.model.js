@@ -47,7 +47,7 @@ const quotationSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      enum: ["1.5 kw", "2 kw", "3 kw", "4 kw", "5 kw", "5+ kw"],
+      enum: ["1.5 KW", "2 KW", "3 KW", "4 KW", "5 KW", "5+ KW"],
     },
     buildingAddress: {
       type: String,

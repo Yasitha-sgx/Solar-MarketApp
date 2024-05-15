@@ -9,7 +9,7 @@ const RequestSearchForm = () => {
 
   return (
     <form>
-      <div className="flex flex-col w-full sm:gap-4 sm:flex-row">
+      <div className="flex flex-col w-full md:gap-4 sm:flex-row">
         <div className="relative flex-grow">
           {!searchFocused && (
             <IoMdSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-[#CEDBF0] text-[24px]" />
@@ -41,7 +41,7 @@ const RequestSearchForm = () => {
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            className="btn-fill py-[8px] px-[24px] text-[14px] w-[160px] sm:w-[112px] md:w-[143px]"
+            className="btn-fill py-[8px] px-[24px] text-[14px] w-[160px] sm:w-[112px] md:w-[143px] sm:ms-4 md:ms-0"
           >
             Search
           </button>
@@ -57,44 +57,44 @@ const RequestSearchForm = () => {
       </div>
       <div className="flex-wrap hidden gap-3 mt-2 sm:flex">
         <select
-          id="countries"
-          className="border border-[#CEDBF0] text-[#545A5F] text-[14px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] focus:outline-[#EE723C] focus:outline block p-2.5 "
+          id="service"
+          className=" border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2.5 "
         >
           <option selected>Service</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
+          <option value="Solar Power System">Solar Power System</option>
+          <option value="Battery Storage">Battery Storage</option>
+          <option value="Solar Hot Water">Solar Hot Water</option>
+          <option value="EV Charger">EV Charger</option>
         </select>
         <select
-          id="countries"
-          className="border border-[#CEDBF0] text-[#545A5F] text-[14px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] focus:outline-[#EE723C] focus:outline block p-2.5 "
+          id="roof"
+          className=" border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2.5 "
         >
-          <option selected>Roof Type</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
+          <option selected>Roof Types</option>
+          <option value="Tile">Tile</option>
+          <option value="Tin">Tin</option>
+          <option value="Concrete">Concrete</option>
         </select>
         <select
           id="countries"
-          className="border border-[#CEDBF0] text-[#545A5F] text-[14px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] focus:outline-[#EE723C] focus:outline block p-2.5 "
+          className=" border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2.5 "
         >
           <option selected>Wattage</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
+          <option value="1.5 KW">1.5 KW</option>
+          <option value="2 KW">2 KW</option>
+          <option value="3 KW">3 KW</option>
+          <option value="4 KW">4 KW</option>
+          <option value="5 KW">5 KW</option>
+          <option value="5+ KW">5+ KW</option>
         </select>
         <select
           id="countries"
-          className="border border-[#CEDBF0] text-[#545A5F] text-[14px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] focus:outline-[#EE723C] focus:outline block p-2.5 "
+          className=" border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2.5 "
         >
           <option selected>Storeys</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
+          <option value="1 storey ">1 storey</option>
+          <option value="2 storey">2 storey</option>
+          <option value="3+ storey">3+ storey</option>
         </select>
         <button type="button" className="text-[#E45416] text-[14px]">
           Clear
