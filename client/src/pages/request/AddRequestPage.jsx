@@ -6,8 +6,8 @@ const AddRequestPage = () => {
   return (
     <div className="min-h-screen ">
       <div className="bg-[#FFF8F1] h-[187px]"></div>
-      <div className="flex flex-col w-full ">
-        <div className="flex flex-col mx-auto w-[90%] md:w-[90%] lg:w-[80%] gap-8 -mt-[210px] mb-[13vh]">
+      <div className="flex flex-col items-center w-full ">
+        <div className="flex flex-col w-full max-w-screen-lg gap-8 -mt-[210px] mb-[13vh] p-4">
           <div className="flex items-center gap-5 mt-[72px] text-left">
             <Link to="/">
               <IoIosArrowDropleft className="text-[#EE723C] text-[36px]" />

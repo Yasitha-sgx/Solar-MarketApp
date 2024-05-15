@@ -58,7 +58,7 @@ const RequestSearchForm = () => {
       <div className="flex-wrap hidden gap-3 mt-2 sm:flex">
         <select
           id="service"
-          className=" border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2.5 "
+          className="border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2 "
         >
           <option selected>Service</option>
           <option value="Solar Power System">Solar Power System</option>
@@ -68,7 +68,7 @@ const RequestSearchForm = () => {
         </select>
         <select
           id="roof"
-          className=" border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2.5 "
+          className="border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2 "
         >
           <option selected>Roof Types</option>
           <option value="Tile">Tile</option>
@@ -77,7 +77,7 @@ const RequestSearchForm = () => {
         </select>
         <select
           id="countries"
-          className=" border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2.5 "
+          className="border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2 "
         >
           <option selected>Wattage</option>
           <option value="1.5 KW">1.5 KW</option>
@@ -89,7 +89,7 @@ const RequestSearchForm = () => {
         </select>
         <select
           id="countries"
-          className=" border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2.5 "
+          className="border border-gray-300 text-[#545A5F] text-[12px] text-sm rounded-lg focus:ring-[#EE723C] focus:border-[#EE723C] w-[115px] md:w-[120px] focus:outline-[#EE723C] block w- p-2 "
         >
           <option selected>Storeys</option>
           <option value="1 storey ">1 storey</option>
