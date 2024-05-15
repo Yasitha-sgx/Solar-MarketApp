@@ -209,6 +209,17 @@ export const signIn = async (req, res) => {
   }
 };
 
+//@desc Logout user
+//routes POST /api/users/logout
+//@access Public
+export const signOut = async (req, res) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: "User logged out" });
+};
+
 // @desc    Forgot password
 // @route   POST /api/users/forgot-password
 // @access  Public

@@ -1,12 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import { CgMenu, CgClose } from "react-icons/cg";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import Avatar from "react-avatar";
+import { useLogoutMutation } from "../slices/userApiSlice";
+import { logout } from "../slices/authSlice";
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
+
+  const [logoutApiCall] = useLogoutMutation();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDWOpen, setIsDWOpen] = useState(false);
@@ -51,6 +58,16 @@ const Header = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isMenuOpen]);
+
+  const logoutHandler = async () => {
+    try {
+      await logoutApiCall().unwrap();
+      dispatch(logout());
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -138,7 +155,10 @@ const Header = () => {
                     <a href="#" className="block text-sm text-[#585A6D]">
                       Support
                     </a>
-                    <button className="block w-full px-4 py-2 text-sm text-center btn-fill">
+                    <button
+                      className="block w-full px-4 py-2 text-sm text-center btn-fill"
+                      onClick={logoutHandler}
+                    >
                       Log Out
                     </button>
                   </div>
@@ -234,7 +254,10 @@ const Header = () => {
                             >
                               Support
                             </a>
-                            <button className="block w-full px-4 py-2 text-sm text-center btn-fill">
+                            <button
+                              className="block w-full px-4 py-2 text-sm text-center btn-fill"
+                              onClick={logoutHandler}
+                            >
                               Log Out
                             </button>
                           </div>
