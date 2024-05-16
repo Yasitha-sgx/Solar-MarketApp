@@ -128,18 +128,18 @@ const StepTwo = ({ handleNext }) => (
 
 const StepThree = ({ handleNext }) => (
   <div>
-    <div className="mb-5 w-full sm:w-[95%] md:w-[70%] lg:w-[60%]">
+    <div className="mb-5 w-full md:w-[70%] lg:w-[60%]">
       <div className="flex flex-col gap-1">
         <label className="lbl-txt">Building Address</label>
         <input type="text" className="input" placeholder="Your Address" />
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-5 sm:gap-[8%] mt-5">
-        <div className="flex flex-col sm:w-[46%] lg:w-[50%] gap-1">
+      <div className="flex flex-col gap-5 mt-5 sm:flex-row sm:gap-3">
+        <div className="flex flex-col sm:w-[50%] lg:w-[50%] gap-1">
           <label className="lbl-txt">City</label>
           <input type="text" className="input" placeholder="City" />
         </div>
-        <div className="flex flex-col sm:w-[46%] lg:w-[50%] gap-1">
+        <div className="flex flex-col sm:w-[50%] lg:w-[50%] gap-1">
           <label className="lbl-txt">District</label>
           <input type="text" className="input" placeholder="District" />
         </div>
@@ -149,7 +149,7 @@ const StepThree = ({ handleNext }) => (
     <div className="flex flex-col gap-1">
       <label className="lbl-txt">Additional Notes</label>
       <textarea
-        className="input w-full sm:w-[95%] md:w-[70%] lg:w-[60%] h-20"
+        className="input w-full md:w-[70%] lg:w-[60%] h-20"
         placeholder="Note"
       />
     </div>

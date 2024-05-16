@@ -16,6 +16,34 @@ export const userApiSlice = createApi({
         body: data,
       }),
     }),
+    register: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/sign-up`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    forgotPassword: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/forgot-password`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    emailVerification: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/verify-email`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/reset-password`,
+        method: "POST",
+        body: data,
+      }),
+    }),
     logout: builder.mutation({
       query: () => ({
         url: `${USERS_URL}/sign-out`,
@@ -25,4 +53,11 @@ export const userApiSlice = createApi({
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation } = userApiSlice;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useForgotPasswordMutation,
+  useEmailVerificationMutation,
+  useResetPasswordMutation,
+  useLogoutMutation,
+} = userApiSlice;

@@ -8,7 +8,7 @@ const quotationSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    purpose: [
+    services: [
       {
         type: String,
         required: true,

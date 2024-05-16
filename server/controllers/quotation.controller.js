@@ -9,7 +9,7 @@ export const requestQuotation = async (req, res) => {
   try {
     const id = req.user._id;
     const {
-      purpose,
+      services,
       propertyConnection,
       existingSystem,
       roofType,
@@ -23,7 +23,7 @@ export const requestQuotation = async (req, res) => {
 
     //Checking if values is empty
     if (
-      !purpose ||
+      !services ||
       !propertyConnection ||
       !existingSystem ||
       !roofType ||
@@ -41,7 +41,7 @@ export const requestQuotation = async (req, res) => {
     //Create new Quotation
     const newQuotation = new Quotation({
       requester: id,
-      purpose,
+      services,
       propertyConnection,
       existingSystem,
       roofType,

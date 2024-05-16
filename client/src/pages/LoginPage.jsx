@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginMutation } from "../slices/userApiSlice";
-import { setCredentials } from "../slices/authSlice";
 import toast from "react-hot-toast";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
+import { useLoginMutation } from "../slices/userApiSlice";
+import { setCredentials } from "../slices/authSlice";
 import HeadingOne from "../components/HeadingOne";
 import { validateLoginForm } from "../utils/validations/authFormValidations";
 
@@ -50,20 +50,17 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = validateLoginForm(formData);
-    if (Object.keys(errors).length === 0) {
+    const validationErrors = validateLoginForm(formData);
+    if (Object.keys(validationErrors).length === 0) {
       try {
-        const res = await login({
-          email: formData.email,
-          password: formData.password,
-        }).unwrap();
+        const res = await login(formData).unwrap();
         dispatch(setCredentials({ ...res }));
         navigate("/");
       } catch (err) {
         toast.error(err?.data?.error || err.error);
       }
     } else {
-      setErrors(errors);
+      setErrors(validationErrors);
     }
   };
 

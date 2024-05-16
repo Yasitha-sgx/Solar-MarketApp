@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import toast from "react-hot-toast";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
+import { useResetPasswordMutation } from "../slices/userApiSlice";
 import HeadingOne from "../components/HeadingOne";
 import { validateResetPasswordForm } from "../utils/validations/authFormValidations";
 
@@ -12,7 +13,6 @@ const ResetPasswordPage = () => {
   const navigate = useNavigate();
 
   const [verificationToken, setVerificationToken] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordTwo, setShowPasswordTwo] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,9 +24,15 @@ const ResetPasswordPage = () => {
     confirmPassword: "",
   });
 
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+
   useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
     setVerificationToken(token);
-  }, [token]);
+  }, [navigate, userInfo, token]);
 
   const handlePasswordChange = (e) => {
     const { id, value } = e.target;
@@ -40,28 +46,22 @@ const ResetPasswordPage = () => {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    const errors = validateResetPasswordForm(formData);
+    const validationErrors = validateResetPasswordForm(formData);
 
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post("/api/users/reset-password", {
+        const res = await resetPassword({
           token: verificationToken,
           password: formData.password,
-        });
-        if (response.status === 200) {
-          toast.success(response.data.message);
-          navigate("/login");
-        }
-      } catch (error) {
-        toast.error(`Problem: ${error.response.data.error}`);
-      } finally {
-        setIsLoading(false);
+        }).unwrap();
+        toast.success(res.message);
+        navigate("/login");
+      } catch (err) {
+        toast.error(err?.data?.error || err.error);
       }
     } else {
-      setErrors(errors);
-      setIsLoading(false);
+      setErrors(validationErrors);
     }
   };
 

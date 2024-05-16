@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
-import axios from "axios";
+import { useSelector } from "react-redux";
 
+import { useRegisterMutation } from "../slices/userApiSlice";
 import HeadingOne from "../components/HeadingOne";
 import { validateRegisterForm } from "../utils/validations/authFormValidations";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
 
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -29,6 +29,15 @@ const RegisterPage = () => {
     role: "",
   });
 
+  const [register, { isLoading }] = useRegisterMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
+
   const inputChange = (e) => {
     const { id, value, type, checked } = e.target;
     setFormData((prevFormData) => ({
@@ -40,25 +49,19 @@ const RegisterPage = () => {
 
   const formSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
     const validationErrors = validateRegisterForm(formData);
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post("/api/users/sign-up", formData);
-        if (response.status === 200) {
-          toast.success(response.data.message);
-          navigate("/login");
-        }
+        const res = await register(formData).unwrap();
+        toast.success(res.message);
+        navigate("/login");
       } catch (error) {
-        toast.error(`Problem: ${error.response.data.error}`);
-      } finally {
-        setIsLoading(false);
+        toast.error(error?.data?.error || error.error);
       }
     } else {
       setErrors(validationErrors);
-      setIsLoading(false);
     }
   };
 

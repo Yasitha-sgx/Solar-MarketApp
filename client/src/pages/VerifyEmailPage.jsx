@@ -1,32 +1,36 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+
+import { useEmailVerificationMutation } from "../slices/userApiSlice";
 import HeadingOne from "../components/HeadingOne";
 
 const VerifyEmailPage = () => {
   const { token } = useParams();
 
   const [verificationToken, setVerificationToken] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [emailVerification, { isLoading }] = useEmailVerificationMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+
   useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
     setVerificationToken(token);
-  }, [token]);
+  }, [navigate, userInfo, token]);
 
   const handleVerifyEmail = async () => {
-    setIsLoading(true);
     try {
-      const response = await axios.post("/api/users/verify-email", {
+      await emailVerification({
         token: verificationToken,
-      });
-      toast.success(response.data.message);
+      }).unwrap();
+      toast.success("Account verified!");
       navigate("/login");
-    } catch (error) {
-      toast.error(`Problem: ${error.response.data.error}`);
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      toast.error(err?.data?.error || err.error);
     }
   };
 

@@ -1,43 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useSelector } from "react-redux";
 
+import { useForgotPasswordMutation } from "../slices/userApiSlice";
 import HeadingOne from "../components/HeadingOne";
 import { validateForgotPasswordForm } from "../utils/validations/authFormValidations";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
 
-  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({
     email: "",
   });
 
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
+
   const handleForgotPassword = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    console.log(email);
 
-    const errors = validateForgotPasswordForm(email);
+    const validationErrors = validateForgotPasswordForm(email);
 
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post("/api/users/forgot-password", {
-          email,
-        });
-        if (response.status === 200) {
-          toast.success(response.data.message);
-          navigate("/");
-        }
-      } catch (error) {
-        toast.error(`Problem: ${error.response.data.error}`);
-      } finally {
-        setIsLoading(false);
+        const res = await forgotPassword({ email }).unwrap();
+        toast.success(res.message);
+        navigate("/");
+      } catch (err) {
+        toast.error(err?.data?.error || err.error);
       }
     } else {
-      setErrors(errors);
-      setIsLoading(false);
+      setErrors(validationErrors);
     }
   };
 
