@@ -118,7 +118,7 @@ const EmailField = ({
     <label className="lbl-txt">{label}</label>
     <input
       type={type}
-      className={`input ${error && " border-red-600"}`}
+      className={`input ${error && "!border-red-600"}`}
       placeholder={placeholder}
       id={id}
       value={value}
@@ -143,7 +143,7 @@ const PasswordField = ({
       <label className="lbl-txt">{label}</label>
       <input
         type={showPassword ? "text" : "password"}
-        className={`input ${error && " border-red-600"}`}
+        className={`input ${error && "!border-red-600"}`}
         placeholder={placeholder}
         id={id}
         value={value}

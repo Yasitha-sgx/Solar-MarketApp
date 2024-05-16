@@ -26,7 +26,6 @@ const ForgotPassword = () => {
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
-    console.log(email);
 
     const validationErrors = validateForgotPasswordForm(email);
 
@@ -62,7 +61,7 @@ const ForgotPassword = () => {
             <label className="lbl-txt">Email</label>
             <input
               type="text"
-              className={`input ${errors.email && "border-red-600"}`}
+              className={`input ${errors.email && "!border-red-600"}`}
               placeholder="example@mail.com"
               id="email"
               value={email}

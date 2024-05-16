@@ -26,8 +26,8 @@ const ReviewSection = () => {
   return (
     <div className="py-36 flex flex-col-reverse md:flex-row items-center justify-center w-[80%] mx-auto sm:gap-5 gap-16">
       {/* Testimonials */}
-      <div className="md:w-2/4 flex gap-5">
-        <div className="flex items-center sm:items-start flex-col gap-4">
+      <div className="flex gap-5 md:w-2/4">
+        <div className="flex flex-col items-center gap-4 sm:items-start">
           <IoIosArrowUp
             className="cursor-pointer sm:hidden hover:text-[#E45416]"
             onClick={prevSlide}
@@ -53,7 +53,7 @@ const ReviewSection = () => {
       </div>
 
       {/* Text */}
-      <div className="md:w-2/4 text-center md:text-left">
+      <div className="text-center md:w-2/4 md:text-left">
         <HeadingTwo text="Customer Reviews" />
         <HeadingOne
           text={

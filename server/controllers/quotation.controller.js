@@ -25,7 +25,6 @@ export const requestQuotation = async (req, res) => {
     if (
       !services ||
       !propertyConnection ||
-      !existingSystem ||
       !roofType ||
       !numberOfStories ||
       !solarSystemSize ||

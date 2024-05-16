@@ -78,7 +78,7 @@ const RegisterPage = () => {
               <label className="lbl-txt">First Name</label>
               <input
                 type="text"
-                className={`input ${errors.firstName && " border-red-600"}`}
+                className={`input ${errors.firstName && "!border-red-600"}`}
                 placeholder="First Name"
                 id="firstName"
                 value={formData.firstName}
@@ -93,7 +93,7 @@ const RegisterPage = () => {
               <label className="lbl-txt">Last Name</label>
               <input
                 type="text"
-                className={`input ${errors.lastName && " border-red-600"}`}
+                className={`input ${errors.lastName && "!border-red-600"}`}
                 placeholder="Last Name"
                 id="lastName"
                 value={formData.lastName}
@@ -107,7 +107,7 @@ const RegisterPage = () => {
             <label className="lbl-txt">Email</label>
             <input
               type="text"
-              className={`input ${errors.email && " border-red-600"}`}
+              className={`input ${errors.email && "!border-red-600"}`}
               placeholder="Email"
               id="email"
               value={formData.email}
@@ -120,7 +120,7 @@ const RegisterPage = () => {
             <label className="lbl-txt">Phone</label>
             <input
               type="number"
-              className={`input ${errors.phone && " border-red-600"}`}
+              className={`input ${errors.phone && "!border-red-600"}`}
               placeholder="Phone"
               id="phone"
               value={formData.phone}
@@ -134,7 +134,7 @@ const RegisterPage = () => {
               <label className="lbl-txt">Password</label>
               <input
                 type={showPassword ? "text" : "password"}
-                className={`input ${errors.password && " border-red-600"}`}
+                className={`input ${errors.password && "!border-red-600"}`}
                 placeholder="* * * * * *"
                 id="password"
                 value={formData.password}

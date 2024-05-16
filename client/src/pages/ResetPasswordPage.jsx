@@ -81,7 +81,7 @@ const ResetPasswordPage = () => {
               <label className="lbl-txt">New Password</label>
               <input
                 type={showPassword ? "text" : "password"}
-                className={`input ${errors.password && " border-red-600"}`}
+                className={`input ${errors.password && "!border-red-600"}`}
                 placeholder="* * * * * *"
                 id="password"
                 value={formData.password}
@@ -105,7 +105,7 @@ const ResetPasswordPage = () => {
               <input
                 type={showPasswordTwo ? "text" : "password"}
                 className={`input ${
-                  errors.confirmPassword && " border-red-600"
+                  errors.confirmPassword && "!border-red-600"
                 }`}
                 placeholder="* * * * * *"
                 id="confirmPassword"

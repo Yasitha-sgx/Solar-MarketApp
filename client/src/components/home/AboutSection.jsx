@@ -3,7 +3,7 @@ import HeadingTwo from "../HeadingTwo";
 
 const AboutSection = () => {
   return (
-    <div className="flex py-36 flex-col gap-16">
+    <div className="flex flex-col gap-16 py-36">
       {/* Text Section */}
       <div className="mx-auto text-center w-[80%]">
         <HeadingTwo text="Why SolarMarket?" />

@@ -7,7 +7,7 @@ const BlogSection = () => {
   return (
     <div className="mx-auto py-36 flex flex-col justify-center lg:flex-row w-[80%] gap-16 lg:gap-8 flex-2">
       {/* Text Section */}
-      <div className="text-center sm:text-left justify-center flex-col">
+      <div className="flex-col justify-center text-center sm:text-left">
         <HeadingTwo text="Blog" isColorChange={true} />
         <HeadingOne
           text={
@@ -42,7 +42,7 @@ const BlogSection = () => {
             alt=""
             className="rounded-t-[8px] object-cover w-full h-[250px]"
           />
-          <div className="ms-8 mt-4">
+          <div className="mt-4 ms-8">
             <h4 className="text-[20px] font-semibold mb-4">
               Learn about solar power
             </h4>
@@ -60,7 +60,7 @@ const BlogSection = () => {
             alt=""
             className="rounded-t-[8px] object-cover w-full h-[250px] sm:rounded-se-[64px]"
           />
-          <div className="ms-8 mt-4">
+          <div className="mt-4 ms-8">
             <h4 className="text-[20px] font-semibold mb-4">
               Learn about solar power
             </h4>
