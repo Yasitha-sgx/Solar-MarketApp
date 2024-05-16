@@ -18,7 +18,7 @@ const RequestFormLayout = () => {
     <div>
       <div className="mb-10">
         {/* Tab Nav */}
-        <div className="flex justify-between w-auto sm:w-[60%] md:w-[44%] lg:w-[35%] xl:w-[35%] 2xl:w-[38%] border-[1px] rounded-[24px] text-[14px] text-[#545A5F] mx-auto sm:mx-0">
+        <div className="flex justify-between sm:w-[299px] border-[1px] rounded-[24px] text-[14px] text-[#545A5F] mx-auto sm:mx-0">
           <span
             className={`py-[8px] px-[24px] rounded-s-[24px] ${
               tab === 1 && "bg-[#47647C] text-[#ffffff] rounded-[24px]"
