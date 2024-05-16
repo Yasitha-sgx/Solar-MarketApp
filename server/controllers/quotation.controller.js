@@ -38,8 +38,21 @@ export const requestQuotation = async (req, res) => {
       return;
     }
 
-    //Create new Quotation
+    const maxQuotation = await Quotation.aggregate([
+      {
+        $group: {
+          _id: null,
+          maxQuotationId: { $max: "$quotation_Id" },
+        },
+      },
+    ]);
+
+    const nextQuotationId =
+      maxQuotation.length > 0 ? maxQuotation[0].maxQuotationId + 1 : 1;
+
+    // Create new Quotation
     const newQuotation = new Quotation({
+      quotation_Id: nextQuotationId,
       requester: id,
       services,
       propertyConnection,

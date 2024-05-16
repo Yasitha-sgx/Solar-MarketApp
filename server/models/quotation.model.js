@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const quotationSchema = mongoose.Schema(
   {
+    quotation_Id: {
+      type: Number,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     requester: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
