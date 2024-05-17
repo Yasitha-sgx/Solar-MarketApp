@@ -56,7 +56,7 @@ const RegisterPage = () => {
       try {
         const res = await register(formData).unwrap();
         toast.success(res.message);
-        navigate("/login");
+        navigate("/verify-account");
       } catch (error) {
         toast.error(error?.data?.error || error.error);
       }
@@ -67,7 +67,7 @@ const RegisterPage = () => {
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-[#FFF8F1] py-12">
-      <div className="flex flex-col items-center w-[80%] mx-auto">
+      <div className="flex flex-col items-center w-[80%] max-w-screen-lg mx-auto">
         <HeadingOne text="Let’s Sign Up" />
         <form
           onSubmit={formSubmit}

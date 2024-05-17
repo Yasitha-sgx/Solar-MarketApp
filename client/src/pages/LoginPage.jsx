@@ -65,8 +65,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-[#FFF8F1]">
-      <div className="flex flex-col items-center w-[80%] mx-auto">
+    <div className="flex justify-center items-center bg-[#FFF8F1] min-h-screen">
+      <div className="flex flex-col items-center w-[80%] max-w-screen-lg mx-auto">
         <HeadingOne text="Sign In" />
         <form
           onSubmit={handleSubmit}

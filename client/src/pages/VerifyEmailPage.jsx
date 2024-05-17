@@ -36,7 +36,7 @@ const VerifyEmailPage = () => {
 
   return (
     <div className="bg-[#FFF8F1]">
-      <div className="flex flex-col items-center justify-center min-h-screen gap-4 w-[80%] mx-auto">
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4 w-[80%] max-w-screen-lg mx-auto">
         <div className="mb-4 text-center">
           <HeadingOne text="Verify Email" />
           <p className="sm:w-[70%] mx-auto text-[#141920] text-[14px]">

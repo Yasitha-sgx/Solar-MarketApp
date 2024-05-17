@@ -67,7 +67,7 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="bg-[#FFF8F1]">
-      <div className="flex flex-col justify-center items-center w-[80%] mx-auto min-h-screen">
+      <div className="flex flex-col justify-center items-center w-[80%] max-w-screen-lg mx-auto min-h-screen">
         <div className="text-center">
           <HeadingOne text="Reset Password" />
         </div>

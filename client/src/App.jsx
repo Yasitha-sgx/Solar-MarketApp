@@ -11,6 +11,7 @@ import AddRequestPage from "./pages/request/AddRequestPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ForgotPassword from "./pages/ForgotPassword";
+import VerifyAlertPage from "./pages/VerifyAlertPage";
 
 const App = () => {
   return (
@@ -25,6 +26,25 @@ const App = () => {
           <Route path="/request-quotation" element={<AddRequestPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/verify-account"
+            element={
+              <VerifyAlertPage
+                textOne="Verify Account"
+                textTwo="Thank you for signing up with us! Check your email. Verification link sent to your email,
+          please verify account using it."
+              />
+            }
+          />
+          <Route
+            path="/reset-link"
+            element={
+              <VerifyAlertPage
+                textOne="Reset Password"
+                textTwo="Reset password link sent to your email, Check you email and safely reset your password"
+              />
+            }
+          />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify/:token" element={<VerifyEmailPage />} />
           <Route

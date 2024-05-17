@@ -33,7 +33,7 @@ const ForgotPassword = () => {
       try {
         const res = await forgotPassword({ email }).unwrap();
         toast.success(res.message);
-        navigate("/");
+        navigate("/reset-link");
       } catch (err) {
         toast.error(err?.data?.error || err.error);
       }
