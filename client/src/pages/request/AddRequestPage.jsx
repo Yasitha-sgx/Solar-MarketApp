@@ -26,7 +26,7 @@ const AddRequestPage = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-bg-primary h-[187px]"></div>
+      <div className="bg-[#FFF8F1]  h-[187px]"></div>
       <div className="flex flex-col items-center w-full ">
         <div className="flex flex-col w-full max-w-screen-lg gap-8 -mt-[160px] mb-[70px] p-8 sm:p-8">
           <div className="flex items-center gap-5 text-left">

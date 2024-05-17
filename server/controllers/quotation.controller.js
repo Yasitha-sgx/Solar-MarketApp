@@ -80,7 +80,7 @@ export const allQuotationList = async (req, res) => {
   const limit = parseInt(req.query.limit) || 15;
 
   try {
-    const totalQuotations = await Quotation.countDocuments({ isOpen: true }); // Get total count of documents
+    const totalQuotations = await Quotation.countDocuments({ isOpen: true });
 
     const quotations = await Quotation.aggregate([
       {
@@ -101,7 +101,8 @@ export const allQuotationList = async (req, res) => {
       },
       {
         $project: {
-          purpose: 1,
+          quotation_Id: 1,
+          services: 1,
           propertyConnection: 1,
           existingSystem: 1,
           roofType: 1,
@@ -111,7 +112,7 @@ export const allQuotationList = async (req, res) => {
           city: 1,
           district: 1,
           additionalNotes: 1,
-          isOpen: 1,
+          createdAt: 1,
           requester: {
             requesterFirstName: "$userDetails.firstName",
             requesterLastName: "$userDetails.lastName",
@@ -119,30 +120,7 @@ export const allQuotationList = async (req, res) => {
         },
       },
       {
-        $sort: { _id: -1 },
-      },
-      {
-        $group: {
-          _id: null,
-          quotations: { $push: "$$ROOT" },
-        },
-      },
-      {
-        $unwind: { path: "$quotations", includeArrayIndex: "quotationNumber" },
-      },
-      {
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [
-              "$quotations",
-              {
-                quotationNumber: {
-                  $subtract: [totalQuotations, "$quotationNumber"],
-                },
-              },
-            ],
-          },
-        },
+        $sort: { quotation_Id: -1 },
       },
       {
         $skip: (page - 1) * limit, // Calculate the number of pages
@@ -197,7 +175,8 @@ export const myQuotationList = async (req, res) => {
       },
       {
         $project: {
-          purpose: 1,
+          quotation_Id: 1,
+          services: 1,
           propertyConnection: 1,
           existingSystem: 1,
           roofType: 1,
@@ -207,6 +186,8 @@ export const myQuotationList = async (req, res) => {
           city: 1,
           district: 1,
           additionalNotes: 1,
+          additionalNotes: 1,
+          createdAt: 1,
           requester: {
             requesterFirstName: "$userDetails.firstName",
             requesterLastName: "$userDetails.lastName",
@@ -214,30 +195,7 @@ export const myQuotationList = async (req, res) => {
         },
       },
       {
-        $sort: { _id: -1 },
-      },
-      {
-        $group: {
-          _id: null,
-          quotations: { $push: "$$ROOT" },
-        },
-      },
-      {
-        $unwind: { path: "$quotations", includeArrayIndex: "quotationNumber" },
-      },
-      {
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [
-              "$quotations",
-              {
-                quotationNumber: {
-                  $subtract: [totalQuotations, "$quotationNumber"],
-                },
-              },
-            ],
-          },
-        },
+        $sort: { quotation_Id: -1 },
       },
       {
         $skip: (page - 1) * limit, // Calculate the number of pages to skip

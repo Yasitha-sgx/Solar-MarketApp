@@ -16,7 +16,15 @@ export const requestApiSlice = createApi({
         body: data,
       }),
     }),
+    getAllRequestQuotation: builder.query({
+      query: (data) => ({
+        url: `${REQUEST_URL}/`,
+        method: "GET",
+        params: data,
+      }),
+    }),
   }),
 });
 
-export const { useRequestQuotationMutation } = requestApiSlice;
+export const { useRequestQuotationMutation, useGetAllRequestQuotationQuery } =
+  requestApiSlice;
