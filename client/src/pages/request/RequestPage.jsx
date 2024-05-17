@@ -1,13 +1,21 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import RequestListCard from "../../components/request/RequestListCard";
 import RequestSearchForm from "../../components/request/RequestSearchForm";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { useGetAllRequestQuotationQuery } from "../../slices/requestApiSlice";
+import RequestListCardSkeleton from "../../components/request/RequestListCardSkeleton";
 
 const RequestPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const limit = 15;
   const searchFormRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const query = new URLSearchParams(location.search);
+  const initialPage = parseInt(query.get("page")) || 1;
+
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   const { data, error, isLoading } = useGetAllRequestQuotationQuery({
     page: currentPage,
@@ -43,6 +51,7 @@ const RequestPage = () => {
   const handlePageChange = (page) => {
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
+      navigate(`/request?page=${page}`);
       searchFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
@@ -73,23 +82,31 @@ const RequestPage = () => {
               {totalQuotations} Result{totalQuotations !== 1 && "s"}
             </p>
 
-            {isLoading && <p>Loading...</p>}
+            {isLoading && (
+              <div className="flex flex-col w-full max-w-screen-lg gap-5">
+                {Array.from({ length: 15 }).map((_, index) => (
+                  <RequestListCardSkeleton key={index} />
+                ))}
+              </div>
+            )}
             {error && <p>Error fetching data: {error.message}</p>}
 
-            <div className="flex flex-col w-full max-w-screen-lg gap-5">
-              {quotations.map((quotation) => (
-                <RequestListCard
-                  key={quotation.quotation_Id}
-                  data={quotation}
-                />
-              ))}
-            </div>
+            {!isLoading && (
+              <div className="flex flex-col w-full max-w-screen-lg gap-5">
+                {quotations.map((quotation) => (
+                  <RequestListCard
+                    key={quotation.quotation_Id}
+                    data={quotation}
+                  />
+                ))}
+              </div>
+            )}
 
             {/* Pagination */}
             <div className="flex flex-col items-center gap-8 mt-6 mb-6 sm:flex-row sm:justify-between">
               <div className="text-[16px] flex items-center gap-2">
                 <button
-                  className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px]  h-[40px] flex items-center justify-center font[500]"
+                  className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px]  h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
@@ -110,7 +127,7 @@ const RequestPage = () => {
                   </button>
                 ))}
                 <button
-                  className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px] h-[40px] flex items-center justify-center font[500]"
+                  className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px] h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
                 >
