@@ -176,22 +176,22 @@ const RequestPage = () => {
             {/* Pagination */}
             {quotations.length > 0 && totalPages > 1 && (
               <div className="flex flex-col items-center gap-8 mt-6 mb-6 sm:flex-row sm:justify-between">
-                <div className="text-[16px] flex items-center gap-2">
+                <div className="text-[16px] flex items-center gap-2 flex-wrap justify-center">
                   <button
-                    className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px] h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
+                    className="p-[8px] text-[13px] sm:text-[16px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] sm:min-w-[40px] h-[30px] sm:h-[40px]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
                     <MdKeyboardArrowLeft />
                   </button>
-                  {visiblePages.map((page, index) => (
+                  {visiblePages.map((page) => (
                     <button
-                      key={index}
-                      className={`p-[8px] rounded-sm shadow-md ${
-                        page === currentPage
+                      key={page}
+                      className={`p-[8px] rounded-sm shadow-md text-[13px] sm:text-[16px] ${
+                        currentPage === page
                           ? "bg-[#E45416] text-[#ffffff]"
                           : "text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]"
-                      } min-w-[40px] h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]`}
+                      } min-w-[30px] sm:min-w-[40px] h-[30px] sm:h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]`}
                       onClick={() => handlePageChange(page)}
                       disabled={page === "..."}
                     >
@@ -199,7 +199,7 @@ const RequestPage = () => {
                     </button>
                   ))}
                   <button
-                    className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px] h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
+                    className="p-[8px] text-[13px] sm:text-[16px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] sm:min-w-[40px] h-[30px] sm:h-[40px]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
                   >
