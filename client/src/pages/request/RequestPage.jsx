@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import RequestListCard from "../../components/request/RequestListCard";
 import RequestSearchForm from "../../components/request/RequestSearchForm";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { useGetAllRequestQuotationQuery } from "../../slices/requestApiSlice";
 import RequestListCardSkeleton from "../../components/request/RequestListCardSkeleton";
 
@@ -26,6 +26,7 @@ const RequestPage = () => {
     buildingAddress: query.get("buildingAddress") || "",
   });
   const [submittedFormData, setSubmittedFormData] = useState(formData);
+  const [loading, setLoading] = useState(false);
 
   const { data, error, isLoading, refetch } = useGetAllRequestQuotationQuery({
     page: currentPage,
@@ -42,19 +43,44 @@ const RequestPage = () => {
     updateVisiblePages(currentPage, totalPages);
   }, [currentPage, totalPages]);
 
+  // Function to update the visible pages array
   const updateVisiblePages = (page, total) => {
-    const pages = [];
-    if (total <= 5) {
-      for (let i = 1; i <= total; i++) {
-        pages.push(i);
-      }
-    } else if (page <= 2) {
-      pages.push(1, 2, 3, "...", total);
-    } else if (page > total - 2) {
-      pages.push(1, "...", total - 2, total - 1, total);
-    } else {
-      pages.push(1, "...", page - 1, page, page + 1, "...", total);
+    let pages = [];
+    let dotsInitial = "...";
+    let dotsLeft = "... ";
+    let dotsRight = " ...";
+
+    if (typeof total === "number") {
+      // Check if total is a number
+      total = Array.from({ length: total }, (_, i) => i + 1); // Convert it to an array of page numbers
     }
+
+    if (total.length <= 5) {
+      pages = total; // Just use all the pages if there are 5 or fewer
+    } else if (page >= 1 && page <= 2) {
+      pages = [...total.slice(0, 3), dotsInitial, total[total.length - 1]];
+    } else if (page === 3) {
+      pages = [
+        1,
+        dotsLeft,
+        ...total.slice(1, 4),
+        dotsRight,
+        total[total.length - 1],
+      ];
+    } else if (page > total.length - 2) {
+      pages = [1, dotsLeft, ...total.slice(-3)];
+    } else {
+      pages = [
+        1,
+        dotsLeft,
+        page - 1,
+        page,
+        page + 1,
+        dotsRight,
+        total[total.length - 1],
+      ];
+    }
+
     setVisiblePages(pages);
   };
 
@@ -70,6 +96,7 @@ const RequestPage = () => {
 
   const handlePageChange = (page) => {
     if (page > 0 && page <= totalPages) {
+      setLoading(true);
       setCurrentPage(page);
       navigate({
         pathname: "/request",
@@ -78,7 +105,7 @@ const RequestPage = () => {
           page,
         }).toString()}`,
       });
-      refetch();
+      setLoading(false);
       searchFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
@@ -149,13 +176,14 @@ const RequestPage = () => {
               {totalQuotations} Result{totalQuotations !== 1 && "s"}
             </p>
 
-            {isLoading && (
-              <div className="flex flex-col w-full max-w-screen-lg gap-5">
-                {Array.from({ length: 15 }).map((_, index) => (
-                  <RequestListCardSkeleton key={index} />
-                ))}
-              </div>
-            )}
+            {isLoading ||
+              (loading && (
+                <div className="flex flex-col w-full max-w-screen-lg gap-5">
+                  {Array.from({ length: 15 }).map((_, index) => (
+                    <RequestListCardSkeleton key={index} />
+                  ))}
+                </div>
+              ))}
             {error && <p>Error fetching data: {error.message}</p>}
 
             {!isLoading && quotations.length > 0 ? (
@@ -169,16 +197,16 @@ const RequestPage = () => {
               </div>
             ) : (
               <div className="w-full max-w-screen-lg px-6">
-                No Data Founded!
+                No Result Founded!
               </div>
             )}
 
             {/* Pagination */}
             {quotations.length > 0 && totalPages > 1 && (
-              <div className="flex flex-col items-center gap-8 mt-6 mb-6 sm:flex-row sm:justify-between">
-                <div className="text-[16px] flex items-center gap-2 flex-wrap justify-center">
+              <div className="flex flex-col items-center gap-8 mt-8 mb-6 sm:mt-6 sm:flex-row sm:justify-between">
+                <div className="text-[13px] sm:text-[16px] flex items-center gap-2 flex-wrap justify-center">
                   <button
-                    className="p-[8px] text-[13px] sm:text-[16px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] sm:min-w-[40px] h-[30px] sm:h-[40px]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
+                    className="p-[8px] min-w-[30px] h-[30px] sm:min-w-[40px] sm:h-[40px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
@@ -187,11 +215,11 @@ const RequestPage = () => {
                   {visiblePages.map((page) => (
                     <button
                       key={page}
-                      className={`p-[8px] rounded-sm shadow-md text-[13px] sm:text-[16px] ${
+                      className={`p-[8px] min-w-[30px] h-[30px] sm:min-w-[40px] sm:h-[40px] rounded-sm shadow-md ${
                         currentPage === page
                           ? "bg-[#E45416] text-[#ffffff]"
                           : "text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]"
-                      } min-w-[30px] sm:min-w-[40px] h-[30px] sm:h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]`}
+                      }  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]`}
                       onClick={() => handlePageChange(page)}
                       disabled={page === "..."}
                     >
@@ -199,7 +227,7 @@ const RequestPage = () => {
                     </button>
                   ))}
                   <button
-                    className="p-[8px] text-[13px] sm:text-[16px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] sm:min-w-[40px] h-[30px] sm:h-[40px]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
+                    className="p-[8px] min-w-[30px] h-[30px] sm:min-w-[40px] sm:h-[40px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
                   >

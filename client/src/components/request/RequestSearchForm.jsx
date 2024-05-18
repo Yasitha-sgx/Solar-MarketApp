@@ -79,7 +79,11 @@ const RequestSearchForm = ({
             <button className="flex items-center gap-1 text-[#545A5F] text-[14px] bg-[#FEF7F0] px-[8px] py-[6px]">
               <MdOutlineFilterAlt /> <p className="text-[12px]">Filters</p>
             </button>
-            <button type="button" className="text-[#E45416] text-[14px]">
+            <button
+              type="button"
+              className="text-[#E45416] text-[14px]"
+              onClick={handleClearClick}
+            >
               Clear
             </button>
           </div>
