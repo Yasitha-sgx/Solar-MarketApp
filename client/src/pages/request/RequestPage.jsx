@@ -16,16 +16,26 @@ const RequestPage = () => {
   const initialPage = parseInt(query.get("page")) || 1;
 
   const [currentPage, setCurrentPage] = useState(initialPage);
+  const [formData, setFormData] = useState({
+    quotation_Id: query.get("quotation_Id") || "",
+    services: query.get("services") || "",
+    roofType: query.get("roofType") || "",
+    solarSystemSize: query.get("solarSystemSize") || "",
+    numberOfStories: query.get("numberOfStories") || "",
+    name: query.get("name") || "",
+    buildingAddress: query.get("buildingAddress") || "",
+  });
+  const [submittedFormData, setSubmittedFormData] = useState(formData);
 
-  const { data, error, isLoading } = useGetAllRequestQuotationQuery({
+  const { data, error, isLoading, refetch } = useGetAllRequestQuotationQuery({
     page: currentPage,
     limit,
+    ...submittedFormData,
   });
 
   const quotations = data?.quotations || [];
   const totalQuotations = data?.totalQuotations || 0;
   const totalPages = data?.totalPages || 1;
-
   const [visiblePages, setVisiblePages] = useState([]);
 
   useEffect(() => {
@@ -48,12 +58,64 @@ const RequestPage = () => {
     setVisiblePages(pages);
   };
 
+  const buildQueryParams = (params) => {
+    const queryParams = new URLSearchParams();
+    Object.keys(params).forEach((key) => {
+      if (params[key]) {
+        queryParams.append(key, params[key]);
+      }
+    });
+    return queryParams;
+  };
+
   const handlePageChange = (page) => {
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
-      navigate(`/request?page=${page}`);
+      navigate({
+        pathname: "/request",
+        search: `?${buildQueryParams({
+          ...submittedFormData,
+          page,
+        }).toString()}`,
+      });
+      refetch();
       searchFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setCurrentPage(1);
+    setSubmittedFormData({ ...formData });
+    navigate({
+      pathname: "/request",
+      search: `?${buildQueryParams({
+        ...formData,
+        page: 1,
+      }).toString()}`,
+    });
+    refetch();
+  };
+
+  const handleClearClick = () => {
+    setFormData({
+      quotation_Id: "",
+      services: "",
+      roofType: "",
+      solarSystemSize: "",
+      numberOfStories: "",
+      name: "",
+      buildingAddress: "",
+    });
+    setSubmittedFormData(null);
+    setCurrentPage(1);
+    navigate({
+      pathname: "/request",
+      search: `?${buildQueryParams({
+        page: 1,
+      }).toString()}`,
+    });
+    refetch();
   };
 
   return (
@@ -73,7 +135,12 @@ const RequestPage = () => {
 
           {/* Search Form */}
           <div className="p-6 bg-white border border-[#F0EDEC] rounded-lg shadow-md">
-            <RequestSearchForm />
+            <RequestSearchForm
+              formData={formData}
+              setFormData={setFormData}
+              handleFormSubmit={handleFormSubmit}
+              handleClearClick={handleClearClick}
+            />
           </div>
 
           {/* Request List */}
@@ -91,7 +158,7 @@ const RequestPage = () => {
             )}
             {error && <p>Error fetching data: {error.message}</p>}
 
-            {!isLoading && (
+            {!isLoading && quotations.length > 0 ? (
               <div className="flex flex-col w-full max-w-screen-lg gap-5">
                 {quotations.map((quotation) => (
                   <RequestListCard
@@ -100,44 +167,50 @@ const RequestPage = () => {
                   />
                 ))}
               </div>
+            ) : (
+              <div className="w-full max-w-screen-lg px-6">
+                No Data Founded!
+              </div>
             )}
 
             {/* Pagination */}
-            <div className="flex flex-col items-center gap-8 mt-6 mb-6 sm:flex-row sm:justify-between">
-              <div className="text-[16px] flex items-center gap-2">
-                <button
-                  className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px]  h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  <MdKeyboardArrowLeft />
-                </button>
-                {visiblePages.map((page, index) => (
+            {quotations.length > 0 && totalPages > 1 && (
+              <div className="flex flex-col items-center gap-8 mt-6 mb-6 sm:flex-row sm:justify-between">
+                <div className="text-[16px] flex items-center gap-2">
                   <button
-                    key={index}
-                    className={`p-[8px] rounded-sm shadow-md ${
-                      page === currentPage
-                        ? "bg-[#E45416] text-[#ffffff]"
-                        : "text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]"
-                    } min-w-[40px] h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]`}
-                    onClick={() => handlePageChange(page)}
-                    disabled={page === "..."}
+                    className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px] h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
                   >
-                    {page}
+                    <MdKeyboardArrowLeft />
                   </button>
-                ))}
-                <button
-                  className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px] h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  <MdKeyboardArrowRight />
-                </button>
+                  {visiblePages.map((page, index) => (
+                    <button
+                      key={index}
+                      className={`p-[8px] rounded-sm shadow-md ${
+                        page === currentPage
+                          ? "bg-[#E45416] text-[#ffffff]"
+                          : "text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]"
+                      } min-w-[40px] h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]`}
+                      onClick={() => handlePageChange(page)}
+                      disabled={page === "..."}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button
+                    className="p-[8px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff] min-w-[40px] h-[40px] flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    <MdKeyboardArrowRight />
+                  </button>
+                </div>
+                <p className="text-[#545A5F] text-[12px]">
+                  Page {currentPage} of {totalPages}
+                </p>
               </div>
-              <p className="text-[#545A5F] text-[12px] ">
-                Page {currentPage} of {totalPages}
-              </p>
-            </div>
+            )}
           </div>
         </div>
       </div>

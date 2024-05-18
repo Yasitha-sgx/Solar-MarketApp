@@ -79,14 +79,43 @@ export const allQuotationList = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 15;
 
-  try {
-    const totalQuotations = await Quotation.countDocuments({ isOpen: true });
+  const {
+    quotation_Id,
+    services,
+    roofType,
+    solarSystemSize,
+    numberOfStories,
+    name,
+    buildingAddress,
+  } = req.query;
+  const matchCriteria = {
+    isOpen: true,
+  };
 
-    const quotations = await Quotation.aggregate([
+  // Add search criteria to matchCriteria
+  if (quotation_Id) matchCriteria.quotation_Id = parseInt(quotation_Id);
+  if (services) matchCriteria.services = services;
+  if (roofType) matchCriteria.roofType = roofType;
+  if (solarSystemSize) matchCriteria.solarSystemSize = solarSystemSize;
+  if (numberOfStories) matchCriteria.numberOfStories = numberOfStories;
+
+  try {
+    // Construct the regex for the name search
+    let nameRegex;
+    if (name) {
+      nameRegex = new RegExp(name, "i");
+    }
+
+    // Construct the regex for the buildingAddress search
+    let buildingAddressRegex;
+    if (buildingAddress) {
+      buildingAddressRegex = new RegExp(buildingAddress, "i");
+    }
+
+    // Build the aggregation pipeline for quotations
+    const pipeline = [
       {
-        $match: {
-          isOpen: true,
-        },
+        $match: matchCriteria,
       },
       {
         $lookup: {
@@ -98,6 +127,21 @@ export const allQuotationList = async (req, res) => {
       },
       {
         $unwind: { path: "$userDetails", preserveNullAndEmptyArrays: true },
+      },
+      {
+        $addFields: {
+          fullName: {
+            $concat: ["$userDetails.firstName", " ", "$userDetails.lastName"],
+          },
+        },
+      },
+      {
+        $match: {
+          $and: [
+            name ? { fullName: nameRegex } : {},
+            buildingAddress ? { buildingAddress: buildingAddressRegex } : {},
+          ],
+        },
       },
       {
         $project: {
@@ -123,18 +167,65 @@ export const allQuotationList = async (req, res) => {
         $sort: { quotation_Id: -1 },
       },
       {
-        $skip: (page - 1) * limit, // Calculate the number of pages
+        $skip: (page - 1) * limit,
       },
       {
-        $limit: limit, // Limit the number of items returned per page
+        $limit: limit,
       },
-    ]);
+    ];
+
+    // Build the pipeline to calculate the total count
+    const countPipeline = [
+      {
+        $match: matchCriteria,
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "requester",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $unwind: { path: "$userDetails", preserveNullAndEmptyArrays: true },
+      },
+      {
+        $addFields: {
+          fullName: {
+            $concat: ["$userDetails.firstName", " ", "$userDetails.lastName"],
+          },
+        },
+      },
+      {
+        $match: {
+          $and: [
+            name ? { fullName: nameRegex } : {},
+            buildingAddress ? { buildingAddress: buildingAddressRegex } : {},
+          ],
+        },
+      },
+      {
+        $count: "totalQuotations",
+      },
+    ];
+
+    const totalQuotationsResult = await Quotation.aggregate(countPipeline);
+
+    const totalQuotations =
+      totalQuotationsResult.length > 0
+        ? totalQuotationsResult[0].totalQuotations
+        : 0;
+
+    const quotations = await Quotation.aggregate(pipeline);
+
+    const totalPages = Math.ceil(totalQuotations / limit);
 
     res.status(200).json({
       totalQuotations,
       quotations,
       currentPage: page,
-      totalPages: Math.ceil(totalQuotations / limit),
+      totalPages,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
