@@ -26,7 +26,7 @@ const RequestPage = () => {
     buildingAddress: query.get("buildingAddress") || "",
   });
   const [submittedFormData, setSubmittedFormData] = useState(formData);
-  const [loading, setLoading] = useState(false);
+  const [localIsLoading, setLocalIsLoading] = useState(true);
 
   const { data, error, isLoading, refetch } = useGetAllRequestQuotationQuery({
     page: currentPage,
@@ -34,16 +34,20 @@ const RequestPage = () => {
     ...submittedFormData,
   });
 
+  useEffect(() => {
+    setLocalIsLoading(isLoading);
+  }, [isLoading]);
+
   const quotations = data?.quotations || [];
   const totalQuotations = data?.totalQuotations || 0;
   const totalPages = data?.totalPages || 1;
   const [visiblePages, setVisiblePages] = useState([]);
+  const [openFilters, setOpenFilters] = useState(false);
 
   useEffect(() => {
     updateVisiblePages(currentPage, totalPages);
   }, [currentPage, totalPages]);
 
-  // Function to update the visible pages array
   const updateVisiblePages = (page, total) => {
     let pages = [];
     let dotsInitial = "...";
@@ -51,7 +55,6 @@ const RequestPage = () => {
     let dotsRight = " ...";
 
     if (typeof total === "number") {
-      // Check if total is a number
       total = Array.from({ length: total }, (_, i) => i + 1); // Convert it to an array of page numbers
     }
 
@@ -96,7 +99,6 @@ const RequestPage = () => {
 
   const handlePageChange = (page) => {
     if (page > 0 && page <= totalPages) {
-      setLoading(true);
       setCurrentPage(page);
       navigate({
         pathname: "/request",
@@ -105,8 +107,9 @@ const RequestPage = () => {
           page,
         }).toString()}`,
       });
-      setLoading(false);
       searchFormRef.current.scrollIntoView({ behavior: "smooth" });
+      setLocalIsLoading(true);
+      refetch().finally(() => setLocalIsLoading(false));
     }
   };
 
@@ -121,7 +124,9 @@ const RequestPage = () => {
         page: 1,
       }).toString()}`,
     });
-    refetch();
+    setOpenFilters(false);
+    setLocalIsLoading(true);
+    refetch().finally(() => setLocalIsLoading(false));
   };
 
   const handleClearClick = () => {
@@ -142,7 +147,9 @@ const RequestPage = () => {
         page: 1,
       }).toString()}`,
     });
-    refetch();
+    setOpenFilters(false);
+    setLocalIsLoading(true);
+    refetch().finally(() => setLocalIsLoading(false));
   };
 
   return (
@@ -167,6 +174,8 @@ const RequestPage = () => {
               setFormData={setFormData}
               handleFormSubmit={handleFormSubmit}
               handleClearClick={handleClearClick}
+              openFilters={openFilters}
+              setOpenFilters={setOpenFilters}
             />
           </div>
 
@@ -176,17 +185,16 @@ const RequestPage = () => {
               {totalQuotations} Result{totalQuotations !== 1 && "s"}
             </p>
 
-            {isLoading ||
-              (loading && (
-                <div className="flex flex-col w-full max-w-screen-lg gap-5">
-                  {Array.from({ length: 15 }).map((_, index) => (
-                    <RequestListCardSkeleton key={index} />
-                  ))}
-                </div>
-              ))}
+            {localIsLoading && (
+              <div className="flex flex-col w-full max-w-screen-lg gap-5">
+                {Array.from({ length: 15 }).map((_, index) => (
+                  <RequestListCardSkeleton key={index} />
+                ))}
+              </div>
+            )}
             {error && <p>Error fetching data: {error.message}</p>}
 
-            {!isLoading && quotations.length > 0 ? (
+            {!localIsLoading && quotations.length > 0 ? (
               <div className="flex flex-col w-full max-w-screen-lg gap-5">
                 {quotations.map((quotation) => (
                   <RequestListCard
@@ -204,9 +212,9 @@ const RequestPage = () => {
             {/* Pagination */}
             {quotations.length > 0 && totalPages > 1 && (
               <div className="flex flex-col items-center gap-8 mt-8 mb-6 sm:mt-6 sm:flex-row sm:justify-between">
-                <div className="text-[13px] sm:text-[16px] flex items-center gap-2 flex-wrap justify-center">
+                <div className="text-[15px] flex items-center gap-2 flex-wrap justify-center">
                   <button
-                    className="p-[8px] min-w-[30px] h-[30px] sm:min-w-[40px] sm:h-[40px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
+                    className="p-[8px]  min-w-[40px] h-[40px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
@@ -215,7 +223,7 @@ const RequestPage = () => {
                   {visiblePages.map((page) => (
                     <button
                       key={page}
-                      className={`p-[8px] min-w-[30px] h-[30px] sm:min-w-[40px] sm:h-[40px] rounded-sm shadow-md ${
+                      className={`p-[8px]  min-w-[40px] h-[40px] rounded-sm shadow-md ${
                         currentPage === page
                           ? "bg-[#E45416] text-[#ffffff]"
                           : "text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]"
@@ -227,7 +235,7 @@ const RequestPage = () => {
                     </button>
                   ))}
                   <button
-                    className="p-[8px] min-w-[30px] h-[30px] sm:min-w-[40px] sm:h-[40px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
+                    className="p-[8px]  min-w-[40px] h-[40px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
                   >
