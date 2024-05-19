@@ -12,6 +12,7 @@ import VerifyEmailPage from "./pages/VerifyEmailPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyAlertPage from "./pages/VerifyAlertPage";
+import RequestViewPage from "./pages/request/RequestViewPage";
 
 const App = () => {
   return (
@@ -47,6 +48,7 @@ const App = () => {
           />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify/:token" element={<VerifyEmailPage />} />
+          <Route path="/request/:id" element={<RequestViewPage />} />
           <Route
             path="/reset-password/:token"
             element={<ResetPasswordPage />}

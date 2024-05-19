@@ -9,21 +9,35 @@ import {
 import { FaBatteryEmpty } from "react-icons/fa";
 import { TbChargingPile, TbBolt } from "react-icons/tb";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+
+const FeatureItem = ({ icon, text }) => (
+  <div className="flex gap-2 items-center bg-[#F6F7FA] text-[#545A5F] text-[12px] px-[8px] py-[6px]">
+    {icon}
+    {text}
+  </div>
+);
 
 const RequestListCard = ({ data }) => {
+  const navigate = useNavigate();
   const formattedDate = format(new Date(data.createdAt), "dd.MM.yy hh.mm a");
 
+  const handleNavigate = (id) => {
+    navigate(`/request/${id}`);
+  };
+
   return (
-    <div className="flex justify-center flex-col p-6 bg-white border border-[#F0EDEC] rounded-lg shadow-md cursor-pointer hover:bg-[#FFF8F1]">
+    <div
+      onClick={() => handleNavigate(data.quotation_Id)}
+      className="flex justify-center flex-col p-6 bg-white border border-[#F0EDEC] rounded-lg shadow-md cursor-pointer hover:bg-[#FFF8F1]"
+    >
       <div className="flex justify-between w-full">
         <div className="flex items-center gap-4">
-          <div>
-            <Avatar
-              unstyled={true}
-              name={`${data.requester.requesterFirstName} ${data.requester.requesterLastName}`}
-              className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full bg-[#FFF8F1]"
-            />
-          </div>
+          <Avatar
+            unstyled={true}
+            name={`${data.requester.requesterFirstName} ${data.requester.requesterLastName}`}
+            className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full bg-[#FFF8F1]"
+          />
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1 md:flex-row sm:gap-3">
               <h3 className="text-[16px] text-[#141920]">
@@ -71,7 +85,7 @@ const RequestListCard = ({ data }) => {
         </div>
       </div>
       <div className="mt-4 md:hidden ms-1">
-        <div className="flex flex-wrap gap-2 md:hidden">
+        <div className="flex flex-wrap gap-2">
           {data.services.includes("Solar Power System") && (
             <FeatureItem
               icon={<MdOutlineSolarPower />}
@@ -98,11 +112,5 @@ const RequestListCard = ({ data }) => {
     </div>
   );
 };
-export default RequestListCard;
 
-const FeatureItem = ({ icon, text }) => (
-  <div className="flex gap-2 items-center bg-[#F6F7FA] text-[#545A5F] text-[12px] px-[8px] py-[6px]">
-    {icon}
-    {text}
-  </div>
-);
+export default RequestListCard;

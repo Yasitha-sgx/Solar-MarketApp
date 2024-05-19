@@ -24,7 +24,7 @@ const ReviewSection = () => {
   };
 
   return (
-    <div className="py-36 flex flex-col-reverse md:flex-row items-center justify-center w-[80%] mx-auto sm:gap-5 gap-16">
+    <div className="flex flex-col-reverse items-center justify-center max-w-screen-xl gap-16 px-8 mx-auto py-36 md:flex-row sm:gap-5">
       {/* Testimonials */}
       <div className="flex gap-5 md:w-2/4">
         <div className="flex flex-col items-center gap-4 sm:items-start">

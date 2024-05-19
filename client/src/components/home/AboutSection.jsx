@@ -3,9 +3,9 @@ import HeadingTwo from "../HeadingTwo";
 
 const AboutSection = () => {
   return (
-    <div className="flex flex-col gap-16 py-36">
+    <div className="flex flex-col max-w-screen-xl gap-16 px-8 mx-auto py-36">
       {/* Text Section */}
-      <div className="mx-auto text-center w-[80%]">
+      <div className="text-center">
         <HeadingTwo text="Why SolarMarket?" />
         <HeadingOne
           text={
@@ -27,14 +27,14 @@ const AboutSection = () => {
       </div>
 
       {/* Box Section */}
-      <div className="grid grid-cols-1 justify-items-stretch sm:grid-cols-2 md:grid-cols-3 w-[80%] 2xl:w-[70%] mx-auto gap-6">
+      <div className="grid grid-cols-1 gap-6 justify-items-stretch sm:grid-cols-2 md:grid-cols-3">
         {/* Grid Column 01 */}
         <div className="border-[1px] py-14 px-8 shadow-lg rounded-[8px]">
           <img src="/assets/storefront.svg" alt="store icon" className="mb-8" />
           <h4 className="text-[20px] font-bold mb-4">Transparency</h4>
-          <p className="text-16px text-[#545A5F] leading-[24px]">
-            Compare quotations from <br /> multiple suppliers to find the <br />
-            best fit for your needs.
+          <p className="text-16px text-[#545A5F] leading-[24px] w-60 sm:w-auto">
+            Compare quotations from multiple suppliers to find the best fit for
+            your needs.
           </p>
         </div>
 
@@ -42,8 +42,8 @@ const AboutSection = () => {
         <div className="border-[1px] py-14 px-8 shadow-lg rounded-[8px] ">
           <img src="/assets/award_star.svg" alt="store icon" className="mb-8" />
           <h4 className="text-[20px] font-bold mb-4">Quality Assurance</h4>
-          <p className="text-16px text-[#545A5F] leading-[24px]">
-            We partner with trusted <br /> suppliers to deliver reliable, <br />
+          <p className="text-16px text-[#545A5F] leading-[24px] w-60 sm:w-auto">
+            We partner with trusted suppliers to deliver reliable,
             high-performance solar systems.
           </p>
         </div>
@@ -56,13 +56,9 @@ const AboutSection = () => {
             className="mb-8 md:mb-14"
           />
           <h4 className="text-[20px] font-bold mb-4">Transparency</h4>
-          <p className="text-16px text-[#545A5F] leading-[24px] hidden sm:block">
-            Our user-friendly platform <br /> streamlines the process, making
-            <br /> it effortless to find the perfect <br /> solar solution.
-          </p>
-          <p className="text-16px text-[#545A5F] leading-[24px] block sm:hidden">
-            Our user-friendly platform <br /> streamlines the process, <br />{" "}
-            making it effortless to find <br /> the perfect solar solution.
+          <p className="text-16px text-[#545A5F] leading-[24px] w-60 md:w-auto">
+            Our user-friendly platform streamlines the process, making it
+            effortless to find the perfect solar solution.
           </p>
         </div>
       </div>

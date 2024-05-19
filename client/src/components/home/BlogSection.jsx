@@ -5,23 +5,12 @@ import HeadingTwo from "../HeadingTwo";
 
 const BlogSection = () => {
   return (
-    <div className="mx-auto py-36 flex flex-col justify-center lg:flex-row w-[80%] gap-16 lg:gap-8 flex-2">
+    <div className="flex flex-col justify-center max-w-screen-xl gap-16 px-8 mx-auto py-36 md:flex-row md:gap-6 flex-2">
       {/* Text Section */}
-      <div className="flex-col justify-center text-center sm:text-left">
+      <div className="flex-col justify-center text-center md:w-1/3 sm:text-left">
         <HeadingTwo text="Blog" isColorChange={true} />
-        <HeadingOne
-          text={
-            <>
-              Stay Informed, <br /> Go Solar
-            </>
-          }
-        />
-        <p className="hidden lg:block text-[#545A5F] text-[20px] leading-[30px] mb-12">
-          Explore the latest trends, tips, <br /> and insights about solar
-          energy on our <br /> blog. Our articles cover everything <br /> you
-          need to know to make informed <br /> decisions about solar power.
-        </p>
-        <p className="lg:hidden text-[#545A5F] text-[16px] sm:text-[20px] leading-[30px] mb-12">
+        <HeadingOne text={<>Stay Informed, Go Solar</>} />
+        <p className=" text-[#545A5F] text-[20px] leading-[30px] mb-12">
           Explore the latest trends, tips, and insights about solar energy on
           our blog. Our articles cover everything you need to know to make
           informed decisions about solar power.
@@ -35,7 +24,7 @@ const BlogSection = () => {
       </div>
 
       {/* Card Section */}
-      <div className="grid grid-rows-1 sm:grid-cols-2 justify-items-stretch gap-6 flex-1 mx-auto w-[90%] sm:w-full">
+      <div className="grid flex-1 grid-rows-1 gap-6 px-8 mx-auto md:w-2/3 sm:grid-cols-2 justify-items-stretch">
         <div className="bg-[#ffffff] border-[1px] shadow-md rounded-[8px]">
           <img
             src="/assets/blog-img-01.svg"
@@ -54,21 +43,23 @@ const BlogSection = () => {
           </div>
         </div>
 
-        <div className="bg-[#ffffff] border-[1px] shadow-md rounded-[8px] rounded-ee-[64px] sm:rounded-ee-none sm:rounded-se-[64px]">
-          <img
-            src="/assets/blog-img-02.svg"
-            alt=""
-            className="rounded-t-[8px] object-cover w-full h-[250px] sm:rounded-se-[64px]"
-          />
-          <div className="mt-4 ms-8">
-            <h4 className="text-[20px] font-semibold mb-4">
-              Learn about solar power
-            </h4>
-            <p className="text-[#545A5F] leading-[25px] mb-8 w-[95%]">
-              Solar power, the clean, abundant energy source of tomorrow, is
-              here today. By capturing sunlight and converting it into
-              electricity...
-            </p>
+        <div>
+          <div className="bg-[#ffffff] border-[1px] shadow-md rounded-[8px] rounded-ee-[64px] sm:rounded-ee-none sm:rounded-se-[64px]">
+            <img
+              src="/assets/blog-img-02.svg"
+              alt=""
+              className="rounded-t-[8px] object-cover w-full h-[250px] sm:rounded-se-[64px]"
+            />
+            <div className="mt-4 ms-8">
+              <h4 className="text-[20px] font-semibold mb-4">
+                Learn about solar power
+              </h4>
+              <p className="text-[#545A5F] leading-[25px] mb-8 w-[95%]">
+                Solar power, the clean, abundant energy source of tomorrow, is
+                here today. By capturing sunlight and converting it into
+                electricity...
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -13,6 +13,8 @@ const VerifyAlertPage = ({ textOne, textTwo }) => {
     if (userInfo) {
       navigate("/");
     }
+
+    window.scrollTo(0, 0);
   }, [navigate, userInfo]);
 
   return (

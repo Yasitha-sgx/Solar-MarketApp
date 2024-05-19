@@ -36,6 +36,8 @@ const RegisterPage = () => {
     if (userInfo) {
       navigate("/");
     }
+
+    window.scrollTo(0, 0);
   }, [navigate, userInfo]);
 
   const inputChange = (e) => {

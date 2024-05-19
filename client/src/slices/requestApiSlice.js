@@ -23,8 +23,17 @@ export const requestApiSlice = createApi({
         params: data,
       }),
     }),
+    getRequestQuotationById: builder.query({
+      query: (id) => ({
+        url: `${REQUEST_URL}/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useRequestQuotationMutation, useGetAllRequestQuotationQuery } =
-  requestApiSlice;
+export const {
+  useRequestQuotationMutation,
+  useGetAllRequestQuotationQuery,
+  useGetRequestQuotationByIdQuery,
+} = requestApiSlice;

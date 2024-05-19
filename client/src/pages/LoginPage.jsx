@@ -30,6 +30,8 @@ const LoginPage = () => {
     if (userInfo) {
       navigate("/");
     }
+
+    window.scrollTo(0, 0);
   }, [navigate, userInfo]);
 
   const handleChange = (e) => {

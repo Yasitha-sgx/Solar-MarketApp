@@ -20,6 +20,8 @@ const VerifyEmailPage = () => {
       navigate("/");
     }
     setVerificationToken(token);
+
+    window.scrollTo(0, 0);
   }, [navigate, userInfo, token]);
 
   const handleVerifyEmail = async () => {

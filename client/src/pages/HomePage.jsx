@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import AboutSection from "../components/home/AboutSection";
 import BlogSection from "../components/home/BlogSection";
 import HeroSection from "../components/home/HeroSection";
@@ -6,6 +7,10 @@ import ReviewSection from "../components/home/ReviewSection";
 import StepsSection from "../components/home/StepsSection";
 
 const HomePage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen">
       <div className="bg-[#FFF8F1]">

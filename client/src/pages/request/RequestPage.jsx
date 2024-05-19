@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import toast from "react-hot-toast";
+
 import RequestListCard from "../../components/request/RequestListCard";
 import RequestSearchForm from "../../components/request/RequestSearchForm";
 import { useGetAllRequestQuotationQuery } from "../../slices/requestApiSlice";
@@ -8,7 +10,6 @@ import RequestListCardSkeleton from "../../components/request/RequestListCardSke
 
 const RequestPage = () => {
   const limit = 15;
-  const searchFormRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -36,7 +37,10 @@ const RequestPage = () => {
 
   useEffect(() => {
     setLocalIsLoading(isLoading);
-  }, [isLoading]);
+    if (error) {
+      toast.error("Something went wrong! try again");
+    }
+  }, [isLoading, error]);
 
   const quotations = data?.quotations || [];
   const totalQuotations = data?.totalQuotations || 0;
@@ -46,6 +50,8 @@ const RequestPage = () => {
 
   useEffect(() => {
     updateVisiblePages(currentPage, totalPages);
+
+    window.scrollTo(0, 0);
   }, [currentPage, totalPages]);
 
   const updateVisiblePages = (page, total) => {
@@ -107,7 +113,6 @@ const RequestPage = () => {
           page,
         }).toString()}`,
       });
-      searchFormRef.current.scrollIntoView({ behavior: "smooth" });
       setLocalIsLoading(true);
       refetch().finally(() => setLocalIsLoading(false));
     }
@@ -153,7 +158,7 @@ const RequestPage = () => {
   };
 
   return (
-    <div className="min-h-screen" ref={searchFormRef}>
+    <div className="min-h-screen">
       <div className="bg-[#FFF8F1] h-[300px] sm:h-[272px]"></div>
       <div className="flex flex-col items-center w-full">
         <div className="flex flex-col w-full max-w-screen-lg -mt-[252px] sm:-mt-[230px] p-4 sm:p-8">
@@ -192,7 +197,6 @@ const RequestPage = () => {
                 ))}
               </div>
             )}
-            {error && <p>Error fetching data: {error.message}</p>}
 
             {!localIsLoading && quotations.length > 0 ? (
               <div className="flex flex-col w-full max-w-screen-lg gap-5">

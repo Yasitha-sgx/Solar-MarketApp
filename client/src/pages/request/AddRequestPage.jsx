@@ -22,6 +22,8 @@ const AddRequestPage = () => {
     } else if (userInfo.role !== "buyer") {
       redirectToHome();
     }
+
+    window.scrollTo(0, 0);
   }, [navigate, userInfo]);
 
   return (

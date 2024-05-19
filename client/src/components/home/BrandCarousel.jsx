@@ -91,7 +91,7 @@ const BrandCarousel = ({ partnersData }) => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="bg-[#ffffff] border-[1px] w-[80%] mx-auto py-5 px-5 rounded-se-[64px] rounded-[8px] overflow-hidden relative">
+      <div className="bg-[#ffffff] border-[1px] p-5 rounded-se-[64px] rounded-[8px] overflow-hidden relative">
         <div className="grid grid-cols-1 gap-8 justify-items-center sm:grid-cols-2 md:grid-cols-4">
           {renderSlides()}
         </div>

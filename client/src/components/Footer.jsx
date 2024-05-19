@@ -10,10 +10,8 @@ const Footer = () => {
 
   return (
     <footer className="bg-[#141920] bottom-0 w-full">
-      <div className="px-4 sm:px-8">
-        <div
-          className={`flex flex-col items-center justify-between gap-3 py-10 mx-auto max-w-screen-lg md:flex-row md:py-14`}
-        >
+      <div className="">
+        <div className="flex flex-col items-center justify-between max-w-screen-xl gap-3 px-8 py-10 mx-auto md:flex-row md:py-14">
           <div>
             <Link to="/">
               <img src="/assets/footer-logo.svg" alt="logo" />
@@ -34,36 +32,30 @@ const Footer = () => {
               </ul>
             </div>
             <div>
-              <ul className="flex items-center  gap-[22px] text-xl">
+              <ul className="flex items-center gap-[22px] text-xl">
                 <li>
                   <a href="#">
-                    <FaInstagramSquare
-                      className={`rounded-lg text-[#EE723C] hover:text-[#BA552A]`}
-                    />
+                    <FaInstagramSquare className="rounded-lg text-[#EE723C] hover:text-[#BA552A]" />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <FaLinkedin
-                      className={`rounded-lg text-[#EE723C] hover:text-[#BA552A]`}
-                    />
+                    <FaLinkedin className="rounded-lg text-[#EE723C] hover:text-[#BA552A]" />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <FaFacebookSquare
-                      className={`rounded-lg text-[#EE723C] hover:text-[#BA552A]`}
-                    />
+                    <FaFacebookSquare className="rounded-lg text-[#EE723C] hover:text-[#BA552A]" />
                   </a>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-        <hr className={`mt-3 text-[#4B4D50] max-w-screen-lg mx-auto`} />
-        <div
-          className={`flex flex-col md:flex-row items-center justify-between max-w-screen-lg mx-auto py-6 md:py-14 text-[#CCCCCC] text-xs`}
-        >
+        <div className="flex max-w-screen-xl px-8 mx-auto">
+          <hr className="mt-3 border-t border-[#4B4D50] w-full" />
+        </div>
+        <div className="flex flex-col md:flex-row items-center justify-between max-w-screen-xl px-8 mx-auto py-6 md:py-14 text-[#CCCCCC] text-xs">
           <div>
             <p>&copy; {year} SolarMarket. All rights reserved.</p>
           </div>
