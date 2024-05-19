@@ -306,3 +306,59 @@ export const myQuotationList = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// @desc    Get a single quotation by quotation_Id
+// @route   GET /api/quotations/:quotation_Id
+// @access  Public
+export const getQuotationById = async (req, res) => {
+  try {
+    const quotation_Id = parseInt(req.params.quotation_Id);
+
+    if (isNaN(quotation_Id)) {
+      return res.status(400).json({ error: "Invalid quotation ID" });
+    }
+
+    const quotation = await Quotation.aggregate([
+      {
+        $match: { quotation_Id: quotation_Id },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "requester",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $unwind: { path: "$userDetails", preserveNullAndEmptyArrays: true },
+      },
+      {
+        $project: {
+          quotation_Id: 1,
+          services: 1,
+          propertyConnection: 1,
+          existingSystem: 1,
+          roofType: 1,
+          numberOfStories: 1,
+          solarSystemSize: 1,
+          buildingAddress: 1,
+          additionalNotes: 1,
+          createdAt: 1,
+          requester: {
+            requesterFirstName: "$userDetails.firstName",
+            requesterLastName: "$userDetails.lastName",
+          },
+        },
+      },
+    ]);
+
+    if (!quotation || quotation.length === 0) {
+      return res.status(404).json({ error: "Quotation not found" });
+    }
+
+    res.status(200).json(quotation[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

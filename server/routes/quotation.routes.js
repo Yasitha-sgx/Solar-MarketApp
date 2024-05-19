@@ -1,6 +1,7 @@
 import Router from "express";
 import {
   allQuotationList,
+  getQuotationById,
   myQuotationList,
   requestQuotation,
 } from "../controllers/quotation.controller.js";
@@ -10,6 +11,7 @@ const router = Router();
 
 //public routes
 router.get("/", allQuotationList);
+router.get("/:quotation_Id", getQuotationById);
 
 //private routes
 router.post("/request-quotation", protect, checkBuyerRole, requestQuotation);
