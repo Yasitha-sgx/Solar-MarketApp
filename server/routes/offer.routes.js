@@ -1,14 +1,19 @@
 import Router from "express";
-import { protect } from "../middleware/auth.middleware.js";
+import { checkSellerRole, protect } from "../middleware/auth.middleware.js";
 import { addOffer } from "../controllers/offer.controller.js";
+import upload from "../config/multer.config.js";
 
 const router = Router();
 
 //public routes
-// router.get("/", allQuotationList);
 
 //private routes
-router.post("/add-offer", protect, addOffer);
-// router.get("/user-quotations", protect, checkBuyerRole, myQuotationList);
+router.post(
+  "/add-offer",
+  protect,
+  checkSellerRole,
+  upload.single("material"),
+  addOffer
+);
 
 export default router;

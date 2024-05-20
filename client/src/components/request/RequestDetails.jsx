@@ -16,7 +16,7 @@ const FeatureItem = ({ icon, text }) => (
   </div>
 );
 
-const RequestDetails = ({ data }) => {
+const RequestDetails = ({ data, userInfo, openOfferForm, isOpenOfferForm }) => {
   return (
     <div>
       <div className="mb-10">
@@ -42,7 +42,7 @@ const RequestDetails = ({ data }) => {
           </div>
           <div className="sm:px-[58px] text-[14px]">
             <div className="mt-4 sm:mt-2">
-              <p className="">Additional Notes:</p>
+              <p>Additional Notes:</p>
               <div className="border-[3px] border-[#F0EDEC] p-3 pb-6 rounded-md mt-1">
                 <p className="text-[#545A5F] text-[12px]">
                   {data.additionalNotes}
@@ -51,7 +51,7 @@ const RequestDetails = ({ data }) => {
             </div>
             <div className="flex flex-col mt-4 md:justify-between md:flex-row">
               <div className="md:w-[50%] lg:w-[60%]">
-                <p className="">Need quotations for:</p>
+                <p>Need quotations for:</p>
                 <div className="flex flex-wrap gap-2">
                   {data.services.includes("Solar Power System") && (
                     <FeatureItem
@@ -78,13 +78,13 @@ const RequestDetails = ({ data }) => {
               </div>
               <div className="flex flex-wrap gap-4 mt-4 md:mt-0">
                 <div>
-                  <p className="">Connection to property:</p>
+                  <p>Connection to property:</p>
                   <div className="flex flex-wrap gap-2">
                     <FeatureItem text={data.propertyConnection} />
                   </div>
                 </div>
                 <div>
-                  <p className="">Existing System:</p>
+                  <p>Existing System:</p>
                   <div className="flex flex-wrap gap-2">
                     <FeatureItem
                       text={`${data.existingSystem ? "Yes" : "No"}`}
@@ -122,9 +122,14 @@ const RequestDetails = ({ data }) => {
               </div>
             </div>
 
-            <button className="btn-fill bg-[#E45416] px-[32px] py-[8px] mt-10">
-              Offer Quotation
-            </button>
+            {userInfo?.role !== "buyer" && !isOpenOfferForm && (
+              <button
+                onClick={openOfferForm}
+                className="btn-fill bg-[#E45416] px-[32px] py-[8px] mt-10"
+              >
+                Offer Quotation
+              </button>
+            )}
           </div>
         </div>
       </div>

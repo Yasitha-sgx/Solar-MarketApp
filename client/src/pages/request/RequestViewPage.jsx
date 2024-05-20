@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowDropleft } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -7,11 +7,14 @@ import { format } from "date-fns";
 import { useGetRequestQuotationByIdQuery } from "../../slices/requestApiSlice";
 import RequestDetailsSkeleton from "../../components/request/RequestDetailsSkeleton ";
 import RequestDetails from "../../components/request/RequestDetails";
+import OfferForm from "../../components/offer/OfferForm";
 
 const RequestViewPage = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const [isOpenOfferForm, setIsOpenOfferForm] = useState(false);
 
   const { data, isLoading } = useGetRequestQuotationByIdQuery(id);
 
@@ -19,12 +22,18 @@ const RequestViewPage = () => {
     navigate(-1);
   };
 
-  // Only format the date if data is available
+  const openOfferForm = () => {
+    if (!userInfo) {
+      navigate("/login");
+    } else {
+      setIsOpenOfferForm(true);
+    }
+  };
+
   const formattedDate = data
     ? format(new Date(data.createdAt), "dd.MM.yy hh.mm a")
     : "";
 
-  // Scroll to the top of the page when the component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -55,14 +64,29 @@ const RequestViewPage = () => {
           <div>
             <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff]">
               {isLoading && <RequestDetailsSkeleton />}
-              {!isLoading && data ? (
-                <RequestDetails userInfo={userInfo} data={data} />
-              ) : (
+              {!isLoading && data && (
+                <RequestDetails
+                  userInfo={userInfo}
+                  data={data}
+                  openOfferForm={openOfferForm}
+                  isOpenOfferForm={isOpenOfferForm}
+                />
+              )}
+              {!isLoading && !data && (
                 <div className="w-full max-w-screen-lg px-6">
                   No Result Found!
                 </div>
               )}
             </div>
+
+            {isOpenOfferForm && (
+              <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
+                <OfferForm
+                  quotation={data._id}
+                  setIsOpenOfferForm={setIsOpenOfferForm}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

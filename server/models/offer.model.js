@@ -6,14 +6,23 @@ const offerSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      trim: true,
+    },
+    quotation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Quotation",
+      required: true,
     },
     description: {
       type: String,
       required: true,
       trim: true,
     },
-    proposal: {
+    price: {
+      type: Number,
+      required: true,
+      trim: true,
+    },
+    material: {
       type: String,
       required: true,
     },

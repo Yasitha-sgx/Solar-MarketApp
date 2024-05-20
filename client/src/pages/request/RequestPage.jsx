@@ -42,6 +42,10 @@ const RequestPage = () => {
     }
   }, [isLoading, error]);
 
+  useEffect(() => {
+    refetch();
+  }, [location, refetch]);
+
   const quotations = data?.quotations || [];
   const totalQuotations = data?.totalQuotations || 0;
   const totalPages = data?.totalPages || 1;
@@ -161,7 +165,7 @@ const RequestPage = () => {
     <div className="min-h-screen">
       <div className="bg-[#FFF8F1] h-[300px] sm:h-[272px]"></div>
       <div className="flex flex-col items-center w-full">
-        <div className="flex flex-col w-full max-w-screen-lg -mt-[252px] sm:-mt-[230px] p-4 sm:p-8">
+        <div className="flex flex-col w-full max-w-screen-lg -mt-[252px] sm:-mt-[230px] p-8">
           <div className="mb-8 text-left">
             <h1 className="mb-2 text-[32px] sm:text-[36px] font-semibold text-gray-800 sm:text-5xl">
               Quotation Requests
@@ -209,13 +213,13 @@ const RequestPage = () => {
               </div>
             ) : (
               <div className="w-full max-w-screen-lg px-6">
-                No Result Founded!
+                No Result Found!
               </div>
             )}
 
             {/* Pagination */}
-            {quotations.length > 0 && totalPages > 1 && (
-              <div className="flex flex-col items-center gap-8 mt-8 mb-6 sm:mt-6 sm:flex-row sm:justify-between">
+            {quotations.length > 0 && (
+              <div className="flex flex-col items-center gap-8 mt-8 mb-6 sm:flex-row sm:justify-between">
                 <div className="text-[15px] flex items-center gap-2 flex-wrap justify-center">
                   <button
                     className="p-[8px]  min-w-[40px] h-[40px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"

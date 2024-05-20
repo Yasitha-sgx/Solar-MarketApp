@@ -7,7 +7,7 @@ import Quotation from "../models/quotation.model.js";
 // @access  private
 export const requestQuotation = async (req, res) => {
   try {
-    const id = req.user._id;
+    const requester = req.user._id;
     const {
       services,
       propertyConnection,
@@ -23,6 +23,7 @@ export const requestQuotation = async (req, res) => {
 
     //Checking if values is empty
     if (
+      !requester ||
       !services ||
       !propertyConnection ||
       !roofType ||
@@ -33,8 +34,7 @@ export const requestQuotation = async (req, res) => {
       !district ||
       !additionalNotes
     ) {
-      res.status(400).json({ error: "Missing required fields" });
-      return;
+      return res.status(400).json({ error: "Missing required fields" });
     }
 
     const maxQuotation = await Quotation.aggregate([
@@ -52,7 +52,7 @@ export const requestQuotation = async (req, res) => {
     // Create new Quotation
     const newQuotation = new Quotation({
       quotation_Id: nextQuotationId,
-      requester: id,
+      requester,
       services,
       propertyConnection,
       existingSystem,
@@ -68,7 +68,7 @@ export const requestQuotation = async (req, res) => {
     await newQuotation.save();
     return res.status(201).json(newQuotation);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: "Internal Server error" });
   }
 };
 
@@ -228,7 +228,7 @@ export const allQuotationList = async (req, res) => {
       totalPages,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Internal Server error" });
   }
 };
 
@@ -303,7 +303,7 @@ export const myQuotationList = async (req, res) => {
       totalPages: Math.ceil(totalQuotations / limit),
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Internal Server error" });
   }
 };
 
@@ -335,6 +335,7 @@ export const getQuotationById = async (req, res) => {
       },
       {
         $project: {
+          _id: 1,
           quotation_Id: 1,
           services: 1,
           propertyConnection: 1,
@@ -359,6 +360,6 @@ export const getQuotationById = async (req, res) => {
 
     res.status(200).json(quotation[0]);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Internal Server error" });
   }
 };
