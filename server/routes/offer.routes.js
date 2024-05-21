@@ -1,6 +1,6 @@
 import Router from "express";
 import { checkSellerRole, protect } from "../middleware/auth.middleware.js";
-import { addOffer } from "../controllers/offer.controller.js";
+import { addOffer, getOffer } from "../controllers/offer.controller.js";
 import upload from "../config/multer.config.js";
 
 const router = Router();
@@ -15,5 +15,6 @@ router.post(
   upload.single("material"),
   addOffer
 );
+router.get("/get-offer/:quotation", protect, checkSellerRole, getOffer);
 
 export default router;

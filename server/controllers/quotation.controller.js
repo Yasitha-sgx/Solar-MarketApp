@@ -119,16 +119,20 @@ export const allQuotationList = async (req, res) => {
           from: "users",
           localField: "requester",
           foreignField: "_id",
-          as: "userDetails",
+          as: "requesterDetails",
         },
       },
       {
-        $unwind: { path: "$userDetails", preserveNullAndEmptyArrays: true },
+        $unwind: { path: "$requesterDetails" },
       },
       {
         $addFields: {
           fullName: {
-            $concat: ["$userDetails.firstName", " ", "$userDetails.lastName"],
+            $concat: [
+              "$requesterDetails.firstName",
+              " ",
+              "$requesterDetails.lastName",
+            ],
           },
         },
       },
@@ -155,8 +159,8 @@ export const allQuotationList = async (req, res) => {
           additionalNotes: 1,
           createdAt: 1,
           requester: {
-            requesterFirstName: "$userDetails.firstName",
-            requesterLastName: "$userDetails.lastName",
+            requesterFirstName: "$requesterDetails.firstName",
+            requesterLastName: "$requesterDetails.lastName",
           },
         },
       },
@@ -180,16 +184,20 @@ export const allQuotationList = async (req, res) => {
           from: "users",
           localField: "requester",
           foreignField: "_id",
-          as: "userDetails",
+          as: "requesterDetails",
         },
       },
       {
-        $unwind: { path: "$userDetails", preserveNullAndEmptyArrays: true },
+        $unwind: { path: "$requesterDetails" },
       },
       {
         $addFields: {
           fullName: {
-            $concat: ["$userDetails.firstName", " ", "$userDetails.lastName"],
+            $concat: [
+              "$requesterDetails.firstName",
+              " ",
+              "$requesterDetails.lastName",
+            ],
           },
         },
       },
@@ -232,19 +240,19 @@ export const allQuotationList = async (req, res) => {
 // @route   GET /api/quotations/user-quotation
 // @access  Private
 export const myQuotationList = async (req, res) => {
-  const id = req.user._id;
+  const requester = req.user._id;
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 15;
 
   try {
     const totalQuotations = await Quotation.countDocuments({
-      requester: id,
+      requester,
     });
 
     const quotations = await Quotation.aggregate([
       {
         $match: {
-          requester: new mongoose.Types.ObjectId(id),
+          requester,
           isOpen: true,
         },
       },
@@ -261,11 +269,11 @@ export const myQuotationList = async (req, res) => {
           from: "users",
           localField: "requester",
           foreignField: "_id",
-          as: "userDetails",
+          as: "requesterDetails",
         },
       },
       {
-        $unwind: { path: "$userDetails" },
+        $unwind: { path: "$requesterDetails" },
       },
       {
         $project: {
@@ -283,16 +291,16 @@ export const myQuotationList = async (req, res) => {
           createdAt: 1,
           isOpen: 1,
           requester: {
-            requesterFirstName: "$userDetails.firstName",
-            requesterLastName: "$userDetails.lastName",
+            requesterFirstName: "$requesterDetails.firstName",
+            requesterLastName: "$requesterDetails.lastName",
           },
           offerCount: { $size: "$offers" },
         },
       },
       {
         $sort: {
-          offerCount: -1, // Sort by offerCount first in descending order
-          quotation_Id: -1, // Then sort by quotation_Id in descending order
+          offerCount: -1,
+          quotation_Id: -1,
         },
       },
       {
@@ -318,27 +326,27 @@ export const myQuotationList = async (req, res) => {
 // @route   GET /api/quotations/:quotation_Id
 // @access  Public
 export const getQuotationById = async (req, res) => {
-  try {
-    const quotation_Id = parseInt(req.params.quotation_Id);
+  const quotation_Id = parseInt(req.params.quotation_Id);
 
+  try {
     if (isNaN(quotation_Id)) {
       return res.status(400).json({ error: "Invalid quotation ID" });
     }
 
     const quotation = await Quotation.aggregate([
       {
-        $match: { quotation_Id: quotation_Id },
+        $match: { quotation_Id },
       },
       {
         $lookup: {
           from: "users",
           localField: "requester",
           foreignField: "_id",
-          as: "userDetails",
+          as: "requesterDetails",
         },
       },
       {
-        $unwind: { path: "$userDetails", preserveNullAndEmptyArrays: true },
+        $unwind: { path: "$requesterDetails" },
       },
       {
         $project: {
@@ -354,8 +362,130 @@ export const getQuotationById = async (req, res) => {
           additionalNotes: 1,
           createdAt: 1,
           requester: {
-            requesterFirstName: "$userDetails.firstName",
-            requesterLastName: "$userDetails.lastName",
+            requesterFirstName: "$requesterDetails.firstName",
+            requesterLastName: "$requesterDetails.lastName",
+          },
+        },
+      },
+    ]);
+
+    if (!quotation || quotation.length === 0) {
+      return res.status(404).json({ error: "Quotation not found" });
+    }
+
+    res.status(200).json(quotation[0]);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server error" });
+  }
+};
+
+// @desc    Get a single quotation by quotation_Id and usee id
+// @route   GET /api/user-quotations/:quotation_Id
+// @access  Private
+export const getUserQuotationById = async (req, res) => {
+  const requester = req.user._id;
+  const quotation_Id = parseInt(req.params.quotation_Id);
+
+  try {
+    if (isNaN(quotation_Id)) {
+      return res.status(400).json({ error: "Invalid quotation ID" });
+    }
+
+    const quotation = await Quotation.aggregate([
+      {
+        $match: { quotation_Id, requester },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "requester",
+          foreignField: "_id",
+          as: "requesterDetails",
+        },
+      },
+      {
+        $unwind: { path: "$requesterDetails" },
+      },
+      {
+        $lookup: {
+          from: "offers",
+          localField: "_id",
+          foreignField: "quotation",
+          as: "offers",
+        },
+      },
+      {
+        $unwind: {
+          path: "$offers",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "offers.offerer",
+          foreignField: "_id",
+          as: "offererDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$offererDetails",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          quotation_Id: { $first: "$quotation_Id" },
+          requester: {
+            $first: {
+              requesterFirstName: "$requesterDetails.firstName",
+              requesterLastName: "$requesterDetails.lastName",
+            },
+          },
+          services: { $first: "$services" },
+          propertyConnection: { $first: "$propertyConnection" },
+          existingSystem: { $first: "$existingSystem" },
+          roofType: { $first: "$roofType" },
+          numberOfStories: { $first: "$numberOfStories" },
+          solarSystemSize: { $first: "$solarSystemSize" },
+          buildingAddress: { $first: "$buildingAddress" },
+          additionalNotes: { $first: "$additionalNotes" },
+          createdAt: { $first: "$createdAt" },
+          offers: {
+            $push: {
+              offer_Id: "$offers._id",
+              offererFirstName: "$offererDetails.firstName",
+              offererLastName: "$offererDetails.lastName",
+              description: "$offers.description",
+              price: "$offers.price",
+              material: "$offers.material",
+              createdAt: "$offers.createdAt",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          quotation_Id: 1,
+          requester: 1,
+          services: 1,
+          propertyConnection: 1,
+          existingSystem: 1,
+          roofType: 1,
+          numberOfStories: 1,
+          solarSystemSize: 1,
+          buildingAddress: 1,
+          additionalNotes: 1,
+          createdAt: 1,
+          offers: {
+            $filter: {
+              input: "$offers",
+              as: "offer",
+              cond: { $ne: ["$$offer.offer_Id", null] },
+            },
           },
         },
       },

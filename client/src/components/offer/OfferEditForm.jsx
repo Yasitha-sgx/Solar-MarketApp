@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { IoMdAddCircle } from "react-icons/io";
@@ -7,8 +7,10 @@ import { IoClose } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { validateOfferForm } from "../../utils/validations/offerFormValidations";
 import { useAddOfferMutation } from "../../slices/offerApiSlice";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { RiEditLine } from "react-icons/ri";
 
-const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
+const OfferEditForm = ({ data }) => {
   const [formData, setFormData] = useState({
     description: "",
     price: "",
@@ -19,9 +21,19 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
     material: "",
   });
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isEditable, setIsEditable] = useState(false);
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        description: data?.description || "",
+        price: data?.price || "",
+      });
+      setSelectedFile(data.material || null);
+    }
+  }, [data]);
 
   const [addOffer, { isLoading }] = useAddOfferMutation();
-
   const fileInputRef = useRef(null);
 
   const handleAddMaterialClick = () => {
@@ -72,7 +84,6 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const formDataToSend = new FormData();
-        formDataToSend.append("quotation", quotation);
         formDataToSend.append("description", formData.description);
         formDataToSend.append("price", formData.price);
         if (selectedFile) {
@@ -84,7 +95,6 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
           price: "",
         });
         setSelectedFile(null);
-        setIsOpenOfferForm(false);
         toast.success("Offer added successfully");
       } catch (err) {
         toast.error(err?.data?.error || err.error);
@@ -96,16 +106,16 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
 
   const handleCancel = () => {
     setFormData({
-      description: "",
-      price: "",
+      description: data?.description || "",
+      price: data?.price || "",
     });
     setFormErrors({
       description: "",
       price: "",
       material: "",
     });
-    setSelectedFile(null);
-    setIsOpenOfferForm(false);
+    setSelectedFile(data.material);
+    setIsEditable(false);
   };
 
   return (
@@ -113,7 +123,15 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
       <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
       <form onSubmit={handleSubmit}>
         <ReactQuill
-          className="custom-form-quill"
+          readOnly={true}
+          modules={{ toolbar: false }}
+          className={`custom-card-quill ${isEditable && "hidden"}`}
+          placeholder="Enter your quotation here..."
+          id="description"
+          value={data.description}
+        />
+        <ReactQuill
+          className={`custom-form-quill ${!isEditable && "hidden"}`}
           placeholder="Enter your quotation here..."
           id="description"
           value={formData.description}
@@ -130,11 +148,11 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
             id="price"
             value={formData.price}
             onChange={handleInputChange}
+            disabled={!isEditable}
           />
           <p className="mt-1 text-red-600 text-[12px]">{formErrors.price}</p>
         </div>
         <div className="flex gap-2">
-          {/* Show PDF name and icon */}
           {selectedFile && (
             <div className="relative flex">
               <div>
@@ -143,50 +161,69 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
                   {selectedFile.name}
                 </span>
               </div>
-              <IoClose
-                className="absolute top-0 -mt-2 -mr-2 text-red-600 cursor-pointer left-10"
-                onClick={handleRemoveMaterial}
+              {isEditable && (
+                <IoClose
+                  className="absolute top-0 -mt-2 -mr-2 text-red-600 cursor-pointer left-10"
+                  onClick={handleRemoveMaterial}
+                />
+              )}
+            </div>
+          )}
+          {isEditable && (
+            <div
+              className="flex items-center w-[85px] gap-2 cursor-pointer"
+              onClick={handleAddMaterialClick}
+            >
+              <IoMdAddCircle className="text-[#E45416] text-[24px]" />
+              <label className="text-[#E45416] text-[10px] leading-[10.77px] cursor-pointer">
+                Add Material
+              </label>
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="application/pdf"
+                id="material"
+                hidden
+                onChange={handleInputChange}
               />
             </div>
           )}
-          <div
-            className="flex items-center w-[85px] gap-2 cursor-pointer"
-            onClick={handleAddMaterialClick}
-          >
-            <IoMdAddCircle className="text-[#E45416] text-[24px]" />
-            <label className="text-[#E45416] text-[10px] leading-[10.77px] cursor-pointer">
-              Add Material
-            </label>
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="application/pdf"
-              id="material"
-              hidden
-              onChange={handleInputChange}
-            />
-          </div>
         </div>
         <p className="mt-2 text-red-600 text-[12px]">{formErrors.material}</p>
-        <div className="flex text-[14px] mt-8 gap-2">
-          <button
-            type="submit"
-            className="btn-fill px-[32px] py-[8px]"
-            disabled={isLoading}
-          >
-            {isLoading ? "Sending Offer..." : "Send Offer"}
-          </button>
-          <button
-            onClick={handleCancel}
-            type="button"
-            className="btn-outline px-[32px] py-[8px]"
-          >
-            Cancel
-          </button>
-        </div>
+        {isEditable ? (
+          <div className="flex text-[14px] mt-8 gap-2">
+            <button
+              type="submit"
+              className="btn-fill px-[32px] py-[8px]"
+              disabled={isLoading}
+            >
+              {isLoading ? "Sending Offer..." : "Send Offer"}
+            </button>
+            <button
+              onClick={handleCancel}
+              type="button"
+              className="btn-outline px-[32px] py-[8px]"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-3 mt-8">
+            <button type="submit" className="" disabled={isLoading}>
+              <FaRegTrashAlt className="text-[16px] text-[#C54610]" />
+            </button>
+            <button
+              onClick={() => setIsEditable(true)}
+              type="button"
+              className=""
+            >
+              <RiEditLine className="text-[18px] text-[#1C1B1F]" />
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );
 };
 
-export default OfferForm;
+export default OfferEditForm;

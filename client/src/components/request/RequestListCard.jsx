@@ -24,7 +24,11 @@ const RequestListCard = ({ data, isUser }) => {
   const formattedDate = format(new Date(data.createdAt), "dd.MM.yy hh.mm a");
 
   const handleNavigate = (id) => {
-    navigate(`/request/${id}`);
+    if (isUser) {
+      navigate(`/my-requests/${id}`);
+    } else {
+      navigate(`/request/${id}`);
+    }
   };
 
   const renderFeatureItems = () => (

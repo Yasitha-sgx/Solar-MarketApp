@@ -14,6 +14,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import VerifyAlertPage from "./pages/VerifyAlertPage";
 import RequestViewPage from "./pages/request/RequestViewPage";
 import MyRequestPage from "./pages/request/MyRequestPage";
+import UserRequestViewPage from "./pages/request/UserRequestViewPage";
 
 const App = () => {
   return (
@@ -51,6 +52,7 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify/:token" element={<VerifyEmailPage />} />
           <Route path="/request/:id" element={<RequestViewPage />} />
+          <Route path="/my-requests/:id" element={<UserRequestViewPage />} />
           <Route
             path="/reset-password/:token"
             element={<ResetPasswordPage />}

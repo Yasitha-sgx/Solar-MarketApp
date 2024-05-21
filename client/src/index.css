@@ -69,3 +69,45 @@ a.active {
 .rqt-frm-select {
   @apply px-[12px] py-[9px] rounded-[4px] border-[1px] border-[#CEDBF0] text-[14px] cursor-pointer;
 }
+
+.custom-card-quill .ql-container {
+  @apply px-5 pb-8 rounded-md min-h-[200px];
+}
+
+.custom-form-quill .ql-toolbar {
+  @apply bg-[#F9F9F9]  rounded-t-md;
+}
+
+.custom-form-quill .ql-container {
+  @apply min-h-[200px]  mb-3 rounded-b-md;
+}
+
+.ql-toolbar .ql-picker-label:hover,
+.ql-toolbar .ql-picker-label.ql-active,
+.ql-toolbar .ql-picker-item:hover,
+.ql-toolbar .ql-picker-item.ql-selected,
+.ql-toolbar button:hover,
+.ql-toolbar button:focus,
+.ql-toolbar button.ql-active {
+  color: #e45416 !important;
+}
+
+.ql-toolbar .ql-picker-label:hover .ql-stroke,
+.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-toolbar .ql-picker-item:hover .ql-stroke,
+.ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-toolbar button:hover .ql-stroke,
+.ql-toolbar button:focus .ql-stroke,
+.ql-toolbar button.ql-active .ql-stroke {
+  stroke: #e45416 !important;
+}
+
+.ql-toolbar .ql-picker-label:hover .ql-fill,
+.ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.ql-toolbar .ql-picker-item:hover .ql-fill,
+.ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.ql-toolbar button:hover .ql-fill,
+.ql-toolbar button:focus .ql-fill,
+.ql-toolbar button.ql-active .ql-fill {
+  fill: #e45416 !important;
+}

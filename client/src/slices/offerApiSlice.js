@@ -16,7 +16,13 @@ export const offerApiSlice = createApi({
         body: data,
       }),
     }),
+    getOffer: builder.query({
+      query: (id) => ({
+        url: `${OFFER_URL}/get-offer/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useAddOfferMutation } = offerApiSlice;
+export const { useAddOfferMutation, useGetOfferQuery } = offerApiSlice;

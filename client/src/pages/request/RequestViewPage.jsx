@@ -5,9 +5,11 @@ import { useSelector } from "react-redux";
 import { format } from "date-fns";
 
 import { useGetRequestQuotationByIdQuery } from "../../slices/requestApiSlice";
+import { useGetOfferQuery } from "../../slices/offerApiSlice";
 import RequestDetailsSkeleton from "../../components/request/RequestDetailsSkeleton ";
 import RequestDetails from "../../components/request/RequestDetails";
 import OfferForm from "../../components/offer/OfferForm";
+import OfferEditForm from "../../components/offer/OfferEditForm";
 
 const RequestViewPage = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -15,8 +17,15 @@ const RequestViewPage = () => {
   const { id } = useParams();
 
   const [isOpenOfferForm, setIsOpenOfferForm] = useState(false);
+  const [fetchOffer, setFetchOffer] = useState(false);
 
-  const { data, isLoading } = useGetRequestQuotationByIdQuery(id);
+  const {
+    data: requestData,
+    isLoading,
+    refetch,
+  } = useGetRequestQuotationByIdQuery(id);
+
+  const { data: offerData } = useGetOfferQuery(requestData?._id);
 
   const handleGoBack = () => {
     navigate(-1);
@@ -25,18 +34,21 @@ const RequestViewPage = () => {
   const openOfferForm = () => {
     if (!userInfo) {
       navigate("/login");
-    } else {
+    } else if (offerData) {
+      setFetchOffer(true);
+    } else if (!offerData) {
       setIsOpenOfferForm(true);
     }
   };
 
-  const formattedDate = data
-    ? format(new Date(data.createdAt), "dd.MM.yy hh.mm a")
+  const formattedDate = requestData
+    ? format(new Date(requestData.createdAt), "dd.MM.yy hh.mm a")
     : "";
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    refetch();
+  }, [refetch]);
 
   return (
     <div className="min-h-screen">
@@ -54,7 +66,7 @@ const RequestViewPage = () => {
               <h1 className="text-2xl font-semibold">#{id}</h1>
             </div>
             <div>
-              {data && (
+              {requestData && (
                 <p className="text-[#545A5F] text-[12px]">
                   Posted on {formattedDate}
                 </p>
@@ -64,15 +76,15 @@ const RequestViewPage = () => {
           <div>
             <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff]">
               {isLoading && <RequestDetailsSkeleton />}
-              {!isLoading && data && (
+              {!isLoading && requestData && (
                 <RequestDetails
                   userInfo={userInfo}
-                  data={data}
+                  data={requestData}
                   openOfferForm={openOfferForm}
                   isOpenOfferForm={isOpenOfferForm}
                 />
               )}
-              {!isLoading && !data && (
+              {!isLoading && !requestData && (
                 <div className="w-full max-w-screen-lg px-6">
                   No Result Found!
                 </div>
@@ -80,13 +92,15 @@ const RequestViewPage = () => {
             </div>
 
             {isOpenOfferForm && (
-              <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
+              <>
                 <OfferForm
-                  quotation={data._id}
+                  quotation={requestData._id}
                   setIsOpenOfferForm={setIsOpenOfferForm}
                 />
-              </div>
+              </>
             )}
+
+            {fetchOffer && <OfferEditForm data={offerData} />}
           </div>
         </div>
       </div>

@@ -36,6 +36,12 @@ export const requestApiSlice = createApi({
         method: "GET",
       }),
     }),
+    getUserRequestQuotationById: builder.query({
+      query: (id) => ({
+        url: `${REQUEST_URL}/user-quotations/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -44,4 +50,5 @@ export const {
   useGetAllRequestQuotationQuery,
   useGetUserRequestQuotationQuery,
   useGetRequestQuotationByIdQuery,
+  useGetUserRequestQuotationByIdQuery,
 } = requestApiSlice;

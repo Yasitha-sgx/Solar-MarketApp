@@ -1,5 +1,3 @@
-import { IoLocationOutline } from "react-icons/io5";
-
 const FeatureSkeleton = () => (
   <div className="flex gap-2 items-center bg-[#F6F7FA] text-[#545A5F] text-[12px] px-[8px] py-[6px]">
     <div className="w-4 h-4 rounded-full bg-slate-700"></div>

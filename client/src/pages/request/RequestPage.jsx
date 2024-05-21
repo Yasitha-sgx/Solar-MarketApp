@@ -65,11 +65,11 @@ const RequestPage = () => {
     let dotsRight = " ...";
 
     if (typeof total === "number") {
-      total = Array.from({ length: total }, (_, i) => i + 1); // Convert it to an array of page numbers
+      total = Array.from({ length: total }, (_, i) => i + 1);
     }
 
     if (total.length <= 5) {
-      pages = total; // Just use all the pages if there are 5 or fewer
+      pages = total;
     } else if (page >= 1 && page <= 2) {
       pages = [...total.slice(0, 3), dotsInitial, total[total.length - 1]];
     } else if (page === 3) {
