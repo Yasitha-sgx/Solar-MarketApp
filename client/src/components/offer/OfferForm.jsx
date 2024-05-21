@@ -77,16 +77,7 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
         if (selectedFile) {
           formDataToSend.append("material", selectedFile);
         }
-
-        console.log(
-          "Sending form data:",
-          Object.fromEntries(formDataToSend.entries())
-        ); // Log form data before sending
-
-        const response = await offer(formDataToSend).unwrap();
-
-        console.log("Response received:", response);
-
+        await offer(formDataToSend).unwrap();
         setFormData({
           description: "",
           price: "",
@@ -95,10 +86,7 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
         setIsOpenOfferForm(false);
         toast.success("Offer added successfully");
       } catch (err) {
-        console.error("Error submitting offer:", err); // Log detailed error
-        toast.error(
-          err?.data?.error || err.error || "An unknown error occurred"
-        );
+        toast.error(err?.data?.error || err.error);
       }
     } else {
       setFormErrors(validationErrors);
@@ -116,11 +104,8 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
             height: 200,
             menubar: false,
             branding: false,
-            force_br_newlines: false,
-            force_p_newlines: false,
-            forced_root_block: "",
             plugins: [
-              "autolink lists link image charmap preview anchor",
+              "advlist autolink lists link image charmap print preview anchor",
               "searchreplace visualblocks code fullscreen",
               "insertdatetime media table paste code help wordcount",
             ],

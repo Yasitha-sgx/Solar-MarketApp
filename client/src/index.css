@@ -69,11 +69,3 @@ a.active {
 .rqt-frm-select {
   @apply px-[12px] py-[9px] rounded-[4px] border-[1px] border-[#CEDBF0] text-[14px] cursor-pointer;
 }
-
-.ql-toolbar {
-  @apply bg-[#F9F9F9]  rounded-t-md;
-}
-
-.ql-container {
-  @apply min-h-[200px]  mb-3 rounded-b-md;
-}
