@@ -1,12 +1,11 @@
 import { useState, useRef } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import { Editor } from "@tinymce/tinymce-react";
 import { IoMdAddCircle } from "react-icons/io";
 import { FaFilePdf } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { validateOfferForm } from "../../utils/validations/offerFormValidations";
+import { useAddOfferMutation } from "../../slices/offerApiSlice";
 
 const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
   const [formData, setFormData] = useState({
@@ -19,6 +18,8 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
     material: "",
   });
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const [offer, { isLoading }] = useAddOfferMutation();
 
   const fileInputRef = useRef(null);
 
@@ -48,8 +49,8 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
     return cleanedContent;
   };
 
-  const handleNoteChange = (value) => {
-    const cleanedValue = cleanHtmlContent(value);
+  const handleEditorChange = (content) => {
+    const cleanedValue = cleanHtmlContent(content);
     setFormData((prevState) => ({
       ...prevState,
       description: cleanedValue,
@@ -73,24 +74,31 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
         formDataToSend.append("quotation", quotation);
         formDataToSend.append("description", formData.description);
         formDataToSend.append("price", formData.price);
-        formDataToSend.append("material", selectedFile);
-        const res = await axios({
-          method: "POST",
-          url: "/api/offers/add-offer",
-          data: formDataToSend,
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        if (res.status === 201) {
-          setFormData({
-            description: "",
-            price: "",
-          });
-          setSelectedFile(null);
-          setIsOpenOfferForm(false);
-          toast.success("Offer added successfully");
+        if (selectedFile) {
+          formDataToSend.append("material", selectedFile);
         }
+
+        console.log(
+          "Sending form data:",
+          Object.fromEntries(formDataToSend.entries())
+        ); // Log form data before sending
+
+        const response = await offer(formDataToSend).unwrap();
+
+        console.log("Response received:", response);
+
+        setFormData({
+          description: "",
+          price: "",
+        });
+        setSelectedFile(null);
+        setIsOpenOfferForm(false);
+        toast.success("Offer added successfully");
       } catch (err) {
-        toast.error(err?.data?.error || err.error);
+        console.error("Error submitting offer:", err); // Log detailed error
+        toast.error(
+          err?.data?.error || err.error || "An unknown error occurred"
+        );
       }
     } else {
       setFormErrors(validationErrors);
@@ -101,11 +109,35 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
     <div>
       <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
       <form onSubmit={handleSubmit}>
-        <ReactQuill
-          placeholder="Enter your quotation here..."
-          id="note"
+        <Editor
+          apiKey={import.meta.env.VITE_TINY_API}
           value={formData.description}
-          onChange={handleNoteChange}
+          init={{
+            height: 200,
+            menubar: false,
+            branding: false,
+            force_br_newlines: false,
+            force_p_newlines: false,
+            forced_root_block: "",
+            plugins: [
+              "autolink lists link image charmap preview anchor",
+              "searchreplace visualblocks code fullscreen",
+              "insertdatetime media table paste code help wordcount",
+            ],
+            toolbar:
+              "undo redo | formatselect | bold italic backcolor | \
+              alignleft aligncenter alignright alignjustify | \
+              bullist numlist outdent indent | removeformat | help",
+            setup: (editor) => {
+              editor.on("init", () => {
+                editor.setContent(formData.description);
+              });
+              editor.on("Change", () => {
+                handleEditorChange(editor.getContent());
+              });
+            },
+          }}
+          onEditorChange={handleEditorChange}
         />
         <p className="mt-1 text-red-600 text-[12px]">
           {formErrors.description}
@@ -122,7 +154,6 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
           <p className="mt-1 text-red-600 text-[12px]">{formErrors.price}</p>
         </div>
         <div className="flex gap-2">
-          {/* Show PDF name and icon */}
           {selectedFile && (
             <div className="relative flex">
               <div>
@@ -157,10 +188,18 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
         </div>
         <p className="mt-2 text-red-600 text-[12px]">{formErrors.material}</p>
         <div className="flex text-[14px] mt-8 gap-2">
-          <button type="submit" className="btn-fill px-[32px] py-[8px]">
-            Send Offer
+          <button
+            type="submit"
+            className="btn-fill px-[32px] py-[8px]"
+            disabled={isLoading}
+          >
+            {isLoading ? "Sending Offer..." : "Send Offer"}
           </button>
-          <button type="button" className="btn-outline px-[32px] py-[8px]">
+          <button
+            type="button"
+            className="btn-outline px-[32px] py-[8px]"
+            onClick={() => setIsOpenOfferForm(false)}
+          >
             Cancel
           </button>
         </div>
