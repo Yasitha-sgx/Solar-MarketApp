@@ -129,14 +129,18 @@ const Header = () => {
               {isDWOpen && (
                 <div className="absolute top-[100%] mt-1 bg-white shadow-lg px-10 py-5 rounded-md">
                   <div className="text-[#585A6D] flex flex-col gap-[32px] text-center">
-                    <div className="block text-sm" onClick={handleDWClick}>
-                      <NavLink to="/request-quotation">
-                        Request Quotation
-                      </NavLink>
-                    </div>
-                    <a href="#" className="block text-sm text-[#585A6D]">
-                      Support
-                    </a>
+                    {userInfo.role === "buyer" && (
+                      <>
+                        <div className="block text-sm" onClick={handleDWClick}>
+                          <NavLink to="/request-quotation">
+                            Request Quotation
+                          </NavLink>
+                        </div>
+                        <div className="block text-sm" onClick={handleDWClick}>
+                          <NavLink to="/my-requests">My Requests</NavLink>
+                        </div>
+                      </>
+                    )}
                     <button
                       className="block w-full px-4 py-2 text-sm text-center btn-fill"
                       onClick={logoutHandler}
@@ -225,20 +229,32 @@ const Header = () => {
                     {isDWOpen && (
                       <div className="text-center">
                         <div className="text-[#585A6D] flex flex-col gap-[32px]">
-                          <div
-                            className="block text-sm"
-                            onClick={handleDWClick}
-                          >
-                            <NavLink
-                              to="/request-quotation"
-                              onClick={handleMenuClick}
-                            >
-                              Request Quotation
-                            </NavLink>
-                          </div>
-                          <a href="#" className="block text-sm text-[#585A6D]">
-                            Support
-                          </a>
+                          {userInfo.role === "buyer" && (
+                            <>
+                              <div
+                                className="block text-sm"
+                                onClick={handleDWClick}
+                              >
+                                <NavLink
+                                  to="/request-quotation"
+                                  onClick={handleMenuClick}
+                                >
+                                  Request Quotation
+                                </NavLink>
+                              </div>
+                              <div
+                                className="block text-sm"
+                                onClick={handleDWClick}
+                              >
+                                <NavLink
+                                  to="/my-requests"
+                                  onClick={handleMenuClick}
+                                >
+                                  My Requests
+                                </NavLink>
+                              </div>
+                            </>
+                          )}
                           <button
                             className="block w-full px-4 py-2 text-sm text-center btn-fill"
                             onClick={logoutHandler}

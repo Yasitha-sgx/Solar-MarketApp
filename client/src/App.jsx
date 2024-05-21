@@ -13,6 +13,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyAlertPage from "./pages/VerifyAlertPage";
 import RequestViewPage from "./pages/request/RequestViewPage";
+import MyRequestPage from "./pages/request/MyRequestPage";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/request" element={<RequestPage />} />
+          <Route path="/my-requests" element={<MyRequestPage />} />
           <Route path="/request-quotation" element={<AddRequestPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/login" element={<LoginPage />} />

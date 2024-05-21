@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 import Quotation from "../models/quotation.model.js";
 
-// @desc    Request a quotation
+// @desc    Post a quotation
 // @route   POST /api/quotations/request-quotation
 // @access  private
 export const requestQuotation = async (req, res) => {
@@ -100,19 +100,16 @@ export const allQuotationList = async (req, res) => {
   if (numberOfStories) matchCriteria.numberOfStories = numberOfStories;
 
   try {
-    // Construct the regex for the name search
     let nameRegex;
     if (name) {
       nameRegex = new RegExp(name, "i");
     }
 
-    // Construct the regex for the buildingAddress search
     let buildingAddressRegex;
     if (buildingAddress) {
       buildingAddressRegex = new RegExp(buildingAddress, "i");
     }
 
-    // Build the aggregation pipeline for quotations
     const pipeline = [
       {
         $match: matchCriteria,
@@ -174,7 +171,6 @@ export const allQuotationList = async (req, res) => {
       },
     ];
 
-    // Build the pipeline to calculate the total count
     const countPipeline = [
       {
         $match: matchCriteria,
@@ -243,7 +239,6 @@ export const myQuotationList = async (req, res) => {
   try {
     const totalQuotations = await Quotation.countDocuments({
       requester: id,
-      isOpen: true,
     });
 
     const quotations = await Quotation.aggregate([
@@ -251,6 +246,14 @@ export const myQuotationList = async (req, res) => {
         $match: {
           requester: new mongoose.Types.ObjectId(id),
           isOpen: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "offers",
+          localField: "_id",
+          foreignField: "quotation",
+          as: "offers",
         },
       },
       {
@@ -277,22 +280,26 @@ export const myQuotationList = async (req, res) => {
           city: 1,
           district: 1,
           additionalNotes: 1,
-          additionalNotes: 1,
           createdAt: 1,
+          isOpen: 1,
           requester: {
             requesterFirstName: "$userDetails.firstName",
             requesterLastName: "$userDetails.lastName",
           },
+          offerCount: { $size: "$offers" },
         },
       },
       {
-        $sort: { quotation_Id: -1 },
+        $sort: {
+          offerCount: -1, // Sort by offerCount first in descending order
+          quotation_Id: -1, // Then sort by quotation_Id in descending order
+        },
       },
       {
-        $skip: (page - 1) * limit, // Calculate the number of pages to skip
+        $skip: (page - 1) * limit,
       },
       {
-        $limit: limit, // Limit the number of items returned per page
+        $limit: limit,
       },
     ]);
 
