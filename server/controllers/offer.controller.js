@@ -72,11 +72,13 @@ export const getOffer = async (req, res) => {
   try {
     const offer = await Offer.findOne({ quotation, offerer }).select({
       _id: 1,
+      offerer: 1,
       quotation: 1,
       description: 1,
       price: 1,
       material: 1,
       status: 1,
+      createdAt: 1,
     });
 
     if (!offer) {

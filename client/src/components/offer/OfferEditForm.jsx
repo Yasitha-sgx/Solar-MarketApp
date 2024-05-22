@@ -8,8 +8,10 @@ import { validateOfferForm } from "../../utils/validations/offerFormValidations"
 import { useAddOfferMutation } from "../../slices/offerApiSlice";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RiEditLine } from "react-icons/ri";
+import { format } from "date-fns";
 
 const OfferEditForm = ({ data }) => {
+  const formattedDate = format(new Date(data?.createdAt), "dd.MM.yy hh.mm a");
   const [formData, setFormData] = useState({
     description: "",
     price: "",
@@ -119,7 +121,10 @@ const OfferEditForm = ({ data }) => {
 
   return (
     <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
-      <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
+      <div className="flex justify-between gap-3">
+        <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
+        <p className="text-[12px] text-[#545A5F]">Offered on {formattedDate}</p>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className={`${isEditable && "hidden"} mb-3`}>
           <Editor
@@ -171,9 +176,14 @@ const OfferEditForm = ({ data }) => {
             <div className="relative flex">
               <div>
                 <FaFilePdf className="mr-2 text-[#969FA1] text-[50px]" />
-                <span className="text-[10px] text-[#3F3E4A]">
+                <a
+                  href={`${import.meta.env.VITE_SERVER_URL}/uploads/${
+                    data.material
+                  }`}
+                  className="text-[10px] text-[#3F3E4A]"
+                >
                   {data?.material || selectedFile?.name}
-                </span>
+                </a>
               </div>
               {isEditable && (
                 <IoClose

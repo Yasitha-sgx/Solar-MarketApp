@@ -1,14 +1,10 @@
 import Avatar from "react-avatar";
 import { FaFilePdf } from "react-icons/fa";
 import { Editor } from "@tinymce/tinymce-react";
-import { format, isValid, parseISO } from "date-fns";
+import { format } from "date-fns";
 
 const OfferDetailsCard = ({ data }) => {
-  const createdAt = data.createdAt ? parseISO(data.createdAt) : null;
-  const formattedDate =
-    createdAt && isValid(createdAt)
-      ? format(createdAt, "dd.MM.yy hh.mm a")
-      : "Invalid date";
+  const formattedDate = format(new Date(data?.createdAt), "dd.MM.yy hh.mm a");
 
   return (
     <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
@@ -47,7 +43,7 @@ const OfferDetailsCard = ({ data }) => {
         <FaFilePdf className="mr-2 text-[#969FA1] text-[50px]" />
         <a
           className="text-[10px] text-[#3F3E4A] underline"
-          href={`http://localhost:5000/uploads/${data.material}`}
+          href={`${import.meta.env.VITE_SERVER_URL}/uploads/${data.material}`}
           download
         >
           {data.material}

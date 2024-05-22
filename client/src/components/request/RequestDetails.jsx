@@ -16,7 +16,13 @@ const FeatureItem = ({ icon, text }) => (
   </div>
 );
 
-const RequestDetails = ({ data, userInfo, openOfferForm, isOpenOfferForm }) => {
+const RequestDetails = ({
+  data,
+  userInfo,
+  openOfferForm,
+  isOpenOfferForm,
+  fetchOffer,
+}) => {
   return (
     <div>
       <div className="mb-10">
@@ -122,7 +128,7 @@ const RequestDetails = ({ data, userInfo, openOfferForm, isOpenOfferForm }) => {
               </div>
             </div>
 
-            {userInfo?.role !== "buyer" && !isOpenOfferForm && (
+            {userInfo?.role !== "buyer" && !isOpenOfferForm && !fetchOffer && (
               <button
                 onClick={openOfferForm}
                 className="btn-fill bg-[#E45416] px-[32px] py-[8px] mt-10"

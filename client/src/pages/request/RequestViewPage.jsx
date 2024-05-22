@@ -36,7 +36,7 @@ const RequestViewPage = () => {
       navigate("/login");
     } else if (userInfo && userInfo.role === "seller" && offerData) {
       setFetchOffer(true);
-    } else if (!offerData) {
+    } else if (userInfo && userInfo.role === "seller" && !offerData) {
       setIsOpenOfferForm(true);
     }
   };
@@ -82,6 +82,7 @@ const RequestViewPage = () => {
                   data={requestData}
                   openOfferForm={openOfferForm}
                   isOpenOfferForm={isOpenOfferForm}
+                  fetchOffer={fetchOffer}
                 />
               )}
               {!isLoading && !requestData && (
@@ -96,6 +97,7 @@ const RequestViewPage = () => {
                 <OfferForm
                   quotation={requestData._id}
                   setIsOpenOfferForm={setIsOpenOfferForm}
+                  fetchOffer={fetchOffer}
                 />
               </>
             )}
