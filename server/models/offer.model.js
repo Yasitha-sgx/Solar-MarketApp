@@ -8,7 +8,7 @@ const offerSchema = mongoose.Schema(
       required: true,
     },
     quotation: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Number,
       ref: "Quotation",
       required: true,
     },
@@ -30,14 +30,16 @@ const offerSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      enum: ["pending", "accepted", "rejected"],
-      default: "pending",
+      enum: ["Pending", "Accepted", "Decline"],
+      default: "Pending",
     },
   },
   {
     timestamps: true,
   }
 );
+
+offerSchema.index({ offerer: 1, quotation: 1 }, { unique: true });
 
 const Offer = mongoose.model("Offer", offerSchema);
 export default Offer;

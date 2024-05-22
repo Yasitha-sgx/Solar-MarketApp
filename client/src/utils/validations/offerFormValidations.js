@@ -5,7 +5,7 @@ export const validateOfferForm = (formData, selectedFile) => {
     errors.description = "This field is required*";
   }
 
-  if (!formData.price.trim()) {
+  if (!formData.price) {
     errors.price = "Price is required!*";
   } else if (isNaN(formData.price) || formData.price <= 0) {
     errors.price = "Price must be a positive number.";

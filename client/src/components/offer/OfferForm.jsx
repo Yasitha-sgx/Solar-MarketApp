@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { validateOfferForm } from "../../utils/validations/offerFormValidations";
 import { useAddOfferMutation } from "../../slices/offerApiSlice";
 
-const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
+const OfferForm = ({ quotation, setIsOpenOfferForm, getOfferData }) => {
   const [formData, setFormData] = useState({
     description: "",
     price: "",
@@ -72,6 +72,7 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
           formDataToSend.append("material", selectedFile);
         }
         await addOffer(formDataToSend).unwrap();
+        getOfferData(quotation);
         setFormData({
           description: "",
           price: "",
@@ -102,7 +103,7 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
   };
 
   return (
-    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
+    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff]">
       <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

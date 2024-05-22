@@ -259,7 +259,7 @@ export const myQuotationList = async (req, res) => {
       {
         $lookup: {
           from: "offers",
-          localField: "_id",
+          localField: "quotation_Id",
           foreignField: "quotation",
           as: "offers",
         },
@@ -393,7 +393,7 @@ export const getUserQuotationById = async (req, res) => {
 
     const quotation = await Quotation.aggregate([
       {
-        $match: { quotation_Id, requester },
+        $match: { quotation_Id: quotation_Id, requester: requester },
       },
       {
         $lookup: {
@@ -409,7 +409,7 @@ export const getUserQuotationById = async (req, res) => {
       {
         $lookup: {
           from: "offers",
-          localField: "_id",
+          localField: "quotation_Id",
           foreignField: "quotation",
           as: "offers",
         },

@@ -7,7 +7,7 @@ const OFFER_URL = "/api/offers";
 export const offerApiSlice = createApi({
   reducerPath: "offerApiSlice",
   baseQuery,
-  tagType: ["offer"],
+  tagTypes: ["offer"],
   endpoints: (builder) => ({
     addOffer: builder.mutation({
       query: (data) => ({
@@ -16,13 +16,32 @@ export const offerApiSlice = createApi({
         body: data,
       }),
     }),
-    getOffer: builder.query({
+    getOffer: builder.mutation({
+      query: (data) => ({
+        url: `${OFFER_URL}/get-offer`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    editOffer: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `${OFFER_URL}/edit-offer/${id}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    deleteOffer: builder.mutation({
       query: (id) => ({
-        url: `${OFFER_URL}/get-offer/${id}`,
-        method: "GET",
+        url: `${OFFER_URL}/delete-offer/${id}`,
+        method: "DELETE",
       }),
     }),
   }),
 });
 
-export const { useAddOfferMutation, useGetOfferQuery } = offerApiSlice;
+export const {
+  useAddOfferMutation,
+  useGetOfferMutation,
+  useEditOfferMutation,
+  useDeleteOfferMutation,
+} = offerApiSlice;

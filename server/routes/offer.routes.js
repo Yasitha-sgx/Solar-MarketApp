@@ -1,6 +1,11 @@
 import Router from "express";
 import { checkSellerRole, protect } from "../middleware/auth.middleware.js";
-import { addOffer, getOffer } from "../controllers/offer.controller.js";
+import {
+  addOffer,
+  deleteOffer,
+  editOffer,
+  getOffer,
+} from "../controllers/offer.controller.js";
 import upload from "../config/multer.config.js";
 
 const router = Router();
@@ -15,6 +20,19 @@ router.post(
   upload.single("material"),
   addOffer
 );
-router.get("/get-offer/:quotation", protect, checkSellerRole, getOffer);
+router.post("/get-offer", protect, checkSellerRole, getOffer);
+router.delete(
+  "/delete-offer/:quotation",
+  protect,
+  checkSellerRole,
+  deleteOffer
+);
+router.post(
+  "/edit-offer/:quotation",
+  protect,
+  checkSellerRole,
+  upload.single("material"),
+  editOffer
+);
 
 export default router;

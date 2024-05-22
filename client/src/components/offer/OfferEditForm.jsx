@@ -5,12 +5,21 @@ import { FaFilePdf } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { validateOfferForm } from "../../utils/validations/offerFormValidations";
-import { useAddOfferMutation } from "../../slices/offerApiSlice";
+import {
+  useDeleteOfferMutation,
+  useEditOfferMutation,
+} from "../../slices/offerApiSlice";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RiEditLine } from "react-icons/ri";
 import { format } from "date-fns";
 
-const OfferEditForm = ({ data }) => {
+const OfferEditForm = ({
+  data,
+  quotation,
+  setFetchOffer,
+  getOfferData,
+  setOfferData,
+}) => {
   const formattedDate = format(new Date(data?.createdAt), "dd.MM.yy hh.mm a");
   const [formData, setFormData] = useState({
     description: "",
@@ -23,6 +32,7 @@ const OfferEditForm = ({ data }) => {
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
+  const quotationId = quotation;
 
   useEffect(() => {
     if (data) {
@@ -34,7 +44,9 @@ const OfferEditForm = ({ data }) => {
     }
   }, [data]);
 
-  const [addOffer, { isLoading }] = useAddOfferMutation();
+  const [editOffer, { isLoading }] = useEditOfferMutation();
+  const [deleteOffer, { isLoading: deleteLoading }] = useDeleteOfferMutation();
+
   const fileInputRef = useRef(null);
 
   const handleAddMaterialClick = () => {
@@ -44,8 +56,7 @@ const OfferEditForm = ({ data }) => {
   const handleInputChange = (e) => {
     const { id, value, files } = e.target;
     if (id === "material" && files.length > 0) {
-      const file = files[0];
-      setSelectedFile(file);
+      setSelectedFile(files[0]);
     } else {
       setFormData((prevState) => ({
         ...prevState,
@@ -58,16 +69,10 @@ const OfferEditForm = ({ data }) => {
     });
   };
 
-  const cleanHtmlContent = (htmlContent) => {
-    const cleanedContent = htmlContent.replace(/<p><br><\/p>/g, "").trim();
-    return cleanedContent;
-  };
-
   const handleNoteChange = (content) => {
-    const cleanedContent = cleanHtmlContent(content);
     setFormData((prevState) => ({
       ...prevState,
-      description: cleanedContent,
+      description: content.replace(/<p><br><\/p>/g, "").trim(),
     }));
     setFormErrors((prevState) => ({
       ...prevState,
@@ -90,25 +95,38 @@ const OfferEditForm = ({ data }) => {
         if (selectedFile) {
           formDataToSend.append("material", selectedFile);
         }
-        await addOffer(formDataToSend).unwrap();
+        await editOffer({ id: quotationId, data: formDataToSend }).unwrap();
+        getOfferData(quotation);
         setFormData({
-          description: "",
-          price: "",
+          description: data.description,
+          price: data.price,
         });
-        setSelectedFile(null);
-        toast.success("Offer added successfully");
-      } catch (err) {
-        toast.error(err?.data?.error || err.error);
+        setSelectedFile(data.material);
+        setIsEditable(false);
+        toast.success("Offer updated successfully");
+      } catch (error) {
+        toast.error(error?.data?.error || error.error);
       }
     } else {
       setFormErrors(validationErrors);
     }
   };
 
+  const handleOfferDelete = async () => {
+    try {
+      await deleteOffer(quotationId).unwrap();
+      setOfferData(null);
+      toast.success("Offer deleted successfully");
+      setFetchOffer(false);
+    } catch (error) {
+      toast.error(error?.data?.error || error.error);
+    }
+  };
+
   const handleCancel = () => {
     setFormData({
-      description: data?.description || "",
-      price: data?.price || "",
+      description: data.description,
+      price: data.price,
     });
     setFormErrors({
       description: "",
@@ -120,13 +138,13 @@ const OfferEditForm = ({ data }) => {
   };
 
   return (
-    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
+    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff]">
       <div className="flex justify-between gap-3">
         <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
         <p className="text-[12px] text-[#545A5F]">Offered on {formattedDate}</p>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className={`${isEditable && "hidden"} mb-3`}>
+        <div className={`${isEditable ? "hidden" : ""} mb-3`}>
           <Editor
             apiKey={import.meta.env.VITE_TINY_API}
             initialValue={data.description}
@@ -136,24 +154,30 @@ const OfferEditForm = ({ data }) => {
               toolbar: false,
               branding: false,
             }}
-            className={`custom-card-editor`}
             disabled
           />
         </div>
-        <div className={`${!isEditable && "hidden"} mb-3`}>
+        <div className={`${!isEditable ? "hidden" : ""} mb-3`}>
           <Editor
             apiKey={import.meta.env.VITE_TINY_API}
-            initialValue={formData.description}
             init={{
               height: 200,
               menubar: false,
               branding: false,
+              plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table paste code help wordcount",
+              ],
               toolbar:
-                "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+                "undo redo | formatselect | bold italic backcolor | \
+              alignleft aligncenter alignright alignjustify | \
+              bullist numlist outdent indent | removeformat | help",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px, min-h-100px, text-#545A5F }",
             }}
             onEditorChange={handleNoteChange}
             value={formData.description}
-            className={`custom-form-editor`}
           />
           <p className="mt-1 text-red-600 text-[12px]">
             {formErrors.description}
@@ -182,7 +206,7 @@ const OfferEditForm = ({ data }) => {
                   }`}
                   className="text-[10px] text-[#3F3E4A]"
                 >
-                  {data?.material || selectedFile?.name}
+                  {selectedFile?.name ? selectedFile.name : data?.material}
                 </a>
               </div>
               {isEditable && (
@@ -221,19 +245,25 @@ const OfferEditForm = ({ data }) => {
               className="btn-fill px-[32px] py-[8px]"
               disabled={isLoading}
             >
-              {isLoading ? "Sending Offer..." : "Send Offer"}
+              {isLoading ? "Updating Offer..." : "Update Offer"}
             </button>
             <button
               onClick={handleCancel}
               type="button"
               className="btn-outline px-[32px] py-[8px]"
+              disabled={deleteLoading}
             >
               Cancel
             </button>
           </div>
         ) : (
           <div className="flex gap-3 mt-8">
-            <button type="submit" className="" disabled={isLoading}>
+            <button
+              type="button"
+              className=""
+              disabled={isLoading}
+              onClick={handleOfferDelete}
+            >
               <FaRegTrashAlt className="text-[16px] text-[#C54610]" />
             </button>
             <button
