@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { jwtDecode } from "jwt-decode";
 
 import { useLoginMutation } from "../slices/userApiSlice";
 import { setCredentials } from "../slices/authSlice";
@@ -30,9 +31,7 @@ const LoginPage = () => {
     if (userInfo) {
       navigate("/");
     }
-
-    window.scrollTo(0, 0);
-  }, [navigate, userInfo]);
+  }, [userInfo, navigate]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -56,7 +55,14 @@ const LoginPage = () => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const res = await login(formData).unwrap();
-        dispatch(setCredentials({ ...res }));
+
+        const decodedToken = jwtDecode(res.token);
+
+        const { id, firstName, lastName, role, isVerified, exp } = decodedToken;
+
+        dispatch(
+          setCredentials({ id, firstName, lastName, role, isVerified, exp })
+        );
         navigate("/");
       } catch (err) {
         console.log(err);

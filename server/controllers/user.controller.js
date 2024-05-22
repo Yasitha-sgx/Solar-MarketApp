@@ -179,10 +179,10 @@ export const signIn = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    //Checking if the user exists
+    // Checking if the user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ error: "User doesn't exists" });
+      return res.status(404).json({ error: "User doesn't exist" });
     }
 
     if (!user.isVerified) {
@@ -192,14 +192,17 @@ export const signIn = async (req, res) => {
     }
 
     if (user && (await user.matchPassword(password))) {
-      generateToken(res, user._id, user.role, user.isVerified),
-        res.json({
-          _id: user._id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          isVerified: user.isVerified,
-          role: user.role,
-        });
+      const token = generateToken(
+        res,
+        user._id,
+        user.firstName,
+        user.lastName,
+        user.role,
+        user.isVerified
+      );
+      return res.json({
+        token,
+      });
     } else {
       return res.status(401).json({ error: "Invalid credentials" });
     }

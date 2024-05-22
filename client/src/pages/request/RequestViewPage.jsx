@@ -34,7 +34,7 @@ const RequestViewPage = () => {
   const openOfferForm = () => {
     if (!userInfo) {
       navigate("/login");
-    } else if (offerData) {
+    } else if (userInfo && userInfo.role === "seller" && offerData) {
       setFetchOffer(true);
     } else if (!offerData) {
       setIsOpenOfferForm(true);

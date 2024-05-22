@@ -25,9 +25,15 @@ const UserRequestViewPage = () => {
       : "";
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    refetch();
-  }, [refetch]);
+    if (!userInfo) {
+      navigate("/login");
+    } else if (userInfo.role !== "buyer") {
+      navigate("/");
+    } else {
+      window.scrollTo(0, 0);
+      refetch();
+    }
+  }, [refetch, userInfo, navigate]);
 
   const renderRequestDetails = () => {
     if (isLoading) {

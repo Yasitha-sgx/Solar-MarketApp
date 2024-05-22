@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import RequestListCard from "../../components/request/RequestListCard";
 import { useGetUserRequestQuotationQuery } from "../../slices/requestApiSlice";
 import RequestListCardSkeleton from "../../components/request/RequestListCardSkeleton";
+import { useSelector } from "react-redux";
 
 const MyRequestPage = () => {
   const limit = 15;
@@ -17,6 +18,8 @@ const MyRequestPage = () => {
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [localIsLoading, setLocalIsLoading] = useState(true);
+
+  const { userInfo } = useSelector((state) => state.auth);
 
   const { data, error, isLoading, refetch } = useGetUserRequestQuotationQuery({
     page: currentPage,
@@ -40,10 +43,15 @@ const MyRequestPage = () => {
   const [visiblePages, setVisiblePages] = useState([]);
 
   useEffect(() => {
-    updateVisiblePages(currentPage, totalPages);
-
-    window.scrollTo(0, 0);
-  }, [currentPage, totalPages]);
+    if (!userInfo) {
+      navigate("/login");
+    } else if (userInfo.role !== "buyer") {
+      navigate("/");
+    } else {
+      updateVisiblePages(currentPage, totalPages);
+      window.scrollTo(0, 0);
+    }
+  }, [currentPage, totalPages, userInfo, navigate]);
 
   const updateVisiblePages = (page, total) => {
     let pages = [];

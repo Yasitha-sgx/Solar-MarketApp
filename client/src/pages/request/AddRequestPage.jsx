@@ -2,29 +2,22 @@ import { IoIosArrowDropleft } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+
 import RequestFormLayout from "../../components/request/RequestFormLayout";
 
 const AddRequestPage = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const redirectToLogin = () => {
-    navigate("/login");
-  };
-
-  const redirectToHome = () => {
-    navigate("/");
-  };
-
   useEffect(() => {
     if (!userInfo) {
-      redirectToLogin();
+      navigate("/login");
     } else if (userInfo.role !== "buyer") {
-      redirectToHome();
+      navigate("/");
+    } else {
+      window.scrollTo(0, 0);
     }
-
-    window.scrollTo(0, 0);
-  }, [navigate, userInfo]);
+  }, [userInfo, navigate]);
 
   return (
     <div className="min-h-screen">

@@ -15,8 +15,10 @@ import VerifyAlertPage from "./pages/VerifyAlertPage";
 import RequestViewPage from "./pages/request/RequestViewPage";
 import MyRequestPage from "./pages/request/MyRequestPage";
 import UserRequestViewPage from "./pages/request/UserRequestViewPage";
+import { useTokenExpirationCheck } from "./utils/authUtils.js";
 
 const App = () => {
+  useTokenExpirationCheck();
   return (
     <BrowserRouter>
       <Routes>
@@ -58,11 +60,6 @@ const App = () => {
             element={<ResetPasswordPage />}
           />
         </Route>
-
-        {/* <Route path="" element={<SecondLayout />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Route> */}
       </Routes>
     </BrowserRouter>
   );
