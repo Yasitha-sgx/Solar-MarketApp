@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import { Editor } from "@tinymce/tinymce-react";
 import { IoMdAddCircle } from "react-icons/io";
 import { FaFilePdf } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -62,11 +61,11 @@ const OfferEditForm = ({ data }) => {
     return cleanedContent;
   };
 
-  const handleNoteChange = (value) => {
-    const cleanedValue = cleanHtmlContent(value);
+  const handleNoteChange = (content) => {
+    const cleanedContent = cleanHtmlContent(content);
     setFormData((prevState) => ({
       ...prevState,
-      description: cleanedValue,
+      description: cleanedContent,
     }));
     setFormErrors((prevState) => ({
       ...prevState,
@@ -122,25 +121,40 @@ const OfferEditForm = ({ data }) => {
     <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
       <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
       <form onSubmit={handleSubmit}>
-        <ReactQuill
-          readOnly={true}
-          modules={{ toolbar: false }}
-          className={`custom-card-quill ${isEditable && "hidden"}`}
-          placeholder="Enter your quotation here..."
-          id="description"
-          value={data.description}
-        />
-        <ReactQuill
-          className={`custom-form-quill ${!isEditable && "hidden"}`}
-          placeholder="Enter your quotation here..."
-          id="description"
-          value={formData.description}
-          onChange={handleNoteChange}
-        />
-        <p className="mt-1 text-red-600 text-[12px]">
-          {formErrors.description}
-        </p>
-        <div className="mb-3">
+        <div className={`${isEditable && "hidden"} mb-3`}>
+          <Editor
+            apiKey={import.meta.env.VITE_TINY_API}
+            initialValue={data.description}
+            init={{
+              height: 200,
+              menubar: false,
+              toolbar: false,
+              branding: false,
+            }}
+            className={`custom-card-editor`}
+            disabled
+          />
+        </div>
+        <div className={`${!isEditable && "hidden"} mb-3`}>
+          <Editor
+            apiKey={import.meta.env.VITE_TINY_API}
+            initialValue={formData.description}
+            init={{
+              height: 200,
+              menubar: false,
+              branding: false,
+              toolbar:
+                "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+            }}
+            onEditorChange={handleNoteChange}
+            value={formData.description}
+            className={`custom-form-editor`}
+          />
+          <p className="mt-1 text-red-600 text-[12px]">
+            {formErrors.description}
+          </p>
+        </div>
+        <div className="mb-4">
           <label className="lbl-txt">Price (LKR)</label>
           <input
             type="number"
@@ -158,7 +172,7 @@ const OfferEditForm = ({ data }) => {
               <div>
                 <FaFilePdf className="mr-2 text-[#969FA1] text-[50px]" />
                 <span className="text-[10px] text-[#3F3E4A]">
-                  {selectedFile.name}
+                  {data?.material || selectedFile?.name}
                 </span>
               </div>
               {isEditable && (

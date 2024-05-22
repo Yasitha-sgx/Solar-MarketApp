@@ -1,11 +1,9 @@
 import Avatar from "react-avatar";
 import { FaFilePdf } from "react-icons/fa";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import { Editor } from "@tinymce/tinymce-react";
 import { format, isValid, parseISO } from "date-fns";
 
 const OfferDetailsCard = ({ data }) => {
-  // Validate the date before formatting
   const createdAt = data.createdAt ? parseISO(data.createdAt) : null;
   const formattedDate =
     createdAt && isValid(createdAt)
@@ -14,7 +12,7 @@ const OfferDetailsCard = ({ data }) => {
 
   return (
     <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
           <Avatar
             unstyled={true}
@@ -29,13 +27,21 @@ const OfferDetailsCard = ({ data }) => {
         </div>
         <p className="text-[12px] text-[#545A5F]">Offered on {formattedDate}</p>
       </div>
-      <ReactQuill
-        value={data.description}
-        readOnly={true}
-        modules={{
+      <Editor
+        apiKey={import.meta.env.VITE_TINY_API}
+        initialValue={data.description}
+        init={{
+          height: 200,
+          menubar: false,
           toolbar: false,
+          branding: false,
+          plugins: [
+            "advlist autolink lists link image charmap print preview anchor",
+            "searchreplace visualblocks code fullscreen",
+            "insertdatetime media table paste code help wordcount",
+          ],
         }}
-        className="custom-card-quill"
+        disabled
       />
       <div className="mt-5 px-7 py-5 bg-[#F9F9F9] rounded-lg flex flex-col gap-2">
         <FaFilePdf className="mr-2 text-[#969FA1] text-[50px]" />

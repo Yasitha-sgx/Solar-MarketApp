@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import { Editor } from "@tinymce/tinymce-react";
 import { IoMdAddCircle } from "react-icons/io";
 import { FaFilePdf } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -45,16 +44,10 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
     });
   };
 
-  const cleanHtmlContent = (htmlContent) => {
-    const cleanedContent = htmlContent.replace(/<p><br><\/p>/g, "").trim();
-    return cleanedContent;
-  };
-
-  const handleNoteChange = (value) => {
-    const cleanedValue = cleanHtmlContent(value);
+  const handleEditorChange = (content) => {
     setFormData((prevState) => ({
       ...prevState,
-      description: cleanedValue,
+      description: content,
     }));
     setFormErrors((prevState) => ({
       ...prevState,
@@ -112,17 +105,33 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
     <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
       <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
       <form onSubmit={handleSubmit}>
-        <ReactQuill
-          className="custom-form-quill"
-          placeholder="Enter your quotation here..."
-          id="description"
-          value={formData.description}
-          onChange={handleNoteChange}
-        />
-        <p className="mt-1 text-red-600 text-[12px]">
-          {formErrors.description}
-        </p>
         <div className="mb-3">
+          <Editor
+            apiKey={import.meta.env.VITE_TINY_API}
+            init={{
+              height: 200,
+              menubar: false,
+              branding: false,
+              plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table paste code help wordcount",
+              ],
+              toolbar:
+                "undo redo | formatselect | bold italic backcolor | \
+              alignleft aligncenter alignright alignjustify | \
+              bullist numlist outdent indent | removeformat | help",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px, min-h-100px, text-#545A5F }",
+            }}
+            value={formData.description}
+            onEditorChange={handleEditorChange}
+          />
+          <p className="mt-1 text-red-600 text-[12px]">
+            {formErrors.description}
+          </p>
+        </div>
+        <div className="mb-4">
           <label className="lbl-txt">Price (LKR)</label>
           <input
             type="number"
@@ -134,7 +143,6 @@ const OfferForm = ({ quotation, setIsOpenOfferForm }) => {
           <p className="mt-1 text-red-600 text-[12px]">{formErrors.price}</p>
         </div>
         <div className="flex gap-2">
-          {/* Show PDF name and icon */}
           {selectedFile && (
             <div className="relative flex">
               <div>
