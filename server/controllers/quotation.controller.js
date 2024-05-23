@@ -250,7 +250,6 @@ export const myQuotationList = async (req, res) => {
       {
         $match: {
           requester,
-          isOpen: true,
         },
       },
       {
@@ -296,6 +295,7 @@ export const myQuotationList = async (req, res) => {
       },
       {
         $sort: {
+          isOpen: -1,
           offerCount: -1,
           quotation_Id: -1,
         },
@@ -376,7 +376,7 @@ export const getQuotationById = async (req, res) => {
   }
 };
 
-// @desc    Get a single quotation by quotation_Id and usee id
+// @desc    Get a single quotation by quotation_Id and user id
 // @route   GET /api/user-quotations/:quotation_Id
 // @access  Private
 export const getUserQuotationById = async (req, res) => {
@@ -390,7 +390,7 @@ export const getUserQuotationById = async (req, res) => {
 
     const quotation = await Quotation.aggregate([
       {
-        $match: { quotation_Id: quotation_Id, requester: requester },
+        $match: { quotation_Id, requester },
       },
       {
         $lookup: {
@@ -479,7 +479,12 @@ export const getUserQuotationById = async (req, res) => {
           createdAt: 1,
           offers: {
             $filter: {
-              input: "$offers",
+              input: {
+                $sortArray: {
+                  input: "$offers",
+                  sortBy: { createdAt: -1 },
+                },
+              },
               as: "offer",
               cond: { $ne: ["$$offer.offer_Id", null] },
             },

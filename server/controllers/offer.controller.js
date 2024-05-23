@@ -3,6 +3,7 @@ import fs from "fs/promises"; // Import fs with promises API
 import { fileURLToPath } from "url";
 
 import Offer from "../models/offer.model.js";
+import Quotation from "../models/quotation.model.js";
 import { sendEmail } from "../helper/sendMail.helper.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -263,5 +264,207 @@ export const editOffer = async (req, res) => {
         console.error("Error removing uploaded file:", error);
       }
     }
+  }
+};
+
+// @desc    Accept an offer
+// @route   POST /api/offers/accept-offer/:id
+// @access  Private
+export const acceptOffer = async (req, res) => {
+  const _id = req.params.id;
+  const requester = req.user._id;
+  const { quotation } = req.body;
+
+  try {
+    const offer = await Offer.findById(_id).populate("offerer");
+
+    if (!offer) {
+      return res.status(404).json({ error: "Offer not founded" });
+    }
+
+    if (offer.status === "Accepted") {
+      return res.status(400).json({ error: "Offer already accepted" });
+    }
+
+    const quotationDetails = await Quotation.findOne({
+      quotation_Id: quotation,
+    });
+
+    if (String(quotationDetails.requester._id) !== String(requester)) {
+      return res
+        .status(401)
+        .json({ error: "You can only accept your request offers" });
+    }
+
+    await Offer.updateMany({ quotation }, { $set: { status: "NotAccepted" } });
+
+    offer.status = "Accepted";
+    await offer.save();
+
+    quotationDetails.isOpen = false;
+    await quotationDetails.save();
+
+    //Send verification email
+    if (offer) {
+      const emailSubject = `SolarMarket - Your Offer for Request ${quotation} Has Been Accepted`;
+      const emailText = `Your Offer for Request ${quotation} Has Been Accepted`;
+      const emailHtml = `<html>
+            <head>
+                <style>
+                    body {
+                        font-family: Poppins, sans-serif;
+                        background-color: #FFF8F1;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 50px auto;
+                        background-color: #fff;
+                        padding: 30px 50px;
+                        border: 1px solid #e5e7eb;
+                        border-radius: 8px;
+                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color: #E45416;
+                    }
+                    p {
+                        color: #333;
+                        font-size: 16px;
+                        line-height: 1.6;
+                    }
+                    a {
+                        display: inline-block;
+                        color: #E45416 !important;
+                        text-decoration: none;
+                    }
+                    span{
+                      color:#E45416;
+                    }
+                    a:hover{
+                      color:#EE723C !important;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Your Offer for Request ${quotation} Has Been Accepted</h1>
+                    <p>Dear ${offer.offerer.firstName} ${offer.offerer.lastName},</p>
+                    <p>We are pleased to inform you that the buyer has accepted your offer for the request posted under ID #${quotation}.</p>
+                    <p>Please proceed with the necessary arrangements to fulfill the transaction. You can view the details and communicate with the buyer by clicking
+                    <a href="${process.env.PUBLIC_FRONTEND}/request/${quotation}">here</a>.</p>
+                    <p>If you have any questions or need assistance, feel free to reach out to our support team. We're here to ensure a smooth and successful transaction for you.</p>
+                    <p>Thank you for using our platform. We wish you the best of luck with your transaction!</p>
+                    <p>Best regards,<br/>
+                    <span>SolarMarket</span> Team</p>
+                </div>
+            </body>
+            </html>`;
+
+      await sendEmail(offer.offerer.email, emailSubject, emailText, emailHtml);
+    }
+
+    res.status(200).json({ message: "Offer accepted successfully" });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+// @desc    Decline an offer
+// @route   POST /api/offers/decline-offer/:id
+// @access  Private
+export const DeclineOffer = async (req, res) => {
+  const _id = req.params.id;
+  const requester = req.user._id;
+  const { quotation } = req.body;
+
+  try {
+    const offer = await Offer.findById(_id).populate("offerer");
+
+    if (!offer) {
+      return res.status(404).json({ error: "Offer not founded" });
+    }
+
+    if (offer.status === "Decline") {
+      return res.status(400).json({ error: "Offer already decline" });
+    }
+
+    const quotationDetails = await Quotation.findOne({
+      quotation_Id: quotation,
+    });
+
+    if (String(quotationDetails.requester._id) !== String(requester)) {
+      return res
+        .status(401)
+        .json({ error: "You can only decline your request offers" });
+    }
+
+    offer.status = "Decline";
+    await offer.save();
+
+    //Send verification email
+    if (offer) {
+      const emailSubject = `SolarMarket - Your Offer for Request ${quotation} Has Been Declined`;
+      const emailText = `SolarMarket - Your Offer for Request ${quotation} Has Been Declined`;
+      const emailHtml = `<html>
+            <head>
+                <style>
+                    body {
+                        font-family: Poppins, sans-serif;
+                        background-color: #FFF8F1;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 50px auto;
+                        background-color: #fff;
+                        padding: 30px 50px;
+                        border: 1px solid #e5e7eb;
+                        border-radius: 8px;
+                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color: #E45416;
+                    }
+                    p {
+                        color: #333;
+                        font-size: 16px;
+                        line-height: 1.6;
+                    }
+                    a {
+                        display: inline-block;
+                        color: #E45416 !important;
+                        text-decoration: none;
+                    }
+                    span{
+                      color:#E45416;
+                    }
+                    a:hover{
+                      color:#EE723C !important;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Your Offer for Request ${quotation} Has Been Declined</h1>
+                    <p>Dear ${offer.offerer.firstName} ${offer.offerer.lastName},</p>
+                    <p>We regret to inform you that the buyer has declined your offer for their request under ID #${quotation}.</p>
+                    <p>While this decision may be disappointing, we encourage you to continue exploring opportunities on our platform. Your products are valuable, and there may be other buyers interested in what you have to offer.</p>
+                    <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team. We're here to help you navigate through any challenges and ensure a positive experience on our platform.</p>
+                    <p>Thank you for using our services, and we wish you success in your future transactions!</p>
+                    <p>Best regards,<br/>
+                    <span>SolarMarket</span> Team</p>
+                </div>
+            </body>
+            </html>`;
+
+      await sendEmail(offer.offerer.email, emailSubject, emailText, emailHtml);
+    }
+
+    res.status(200).json({ message: "Offer declined successfully" });
+  } catch (error) {
+    res.status(500).json({ error });
   }
 };

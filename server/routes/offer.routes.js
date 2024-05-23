@@ -1,6 +1,12 @@
 import Router from "express";
-import { checkSellerRole, protect } from "../middleware/auth.middleware.js";
 import {
+  checkBuyerRole,
+  checkSellerRole,
+  protect,
+} from "../middleware/auth.middleware.js";
+import {
+  DeclineOffer,
+  acceptOffer,
   addOffer,
   deleteOffer,
   editOffer,
@@ -10,9 +16,6 @@ import upload from "../config/multer.config.js";
 
 const router = Router();
 
-//public routes
-
-//private routes
 router.post(
   "/add-offer",
   protect,
@@ -34,5 +37,7 @@ router.post(
   upload.single("material"),
   editOffer
 );
+router.post("/accept-offer/:id", protect, checkBuyerRole, acceptOffer);
+router.post("/decline-offer/:id", protect, checkBuyerRole, DeclineOffer);
 
 export default router;

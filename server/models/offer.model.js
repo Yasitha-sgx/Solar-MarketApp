@@ -30,7 +30,7 @@ const offerSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      enum: ["Pending", "Accepted", "Decline"],
+      enum: ["Pending", "Accepted", "NotAccepted", "Decline"],
       default: "Pending",
     },
   },
