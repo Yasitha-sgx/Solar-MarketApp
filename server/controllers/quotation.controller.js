@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 import Quotation from "../models/quotation.model.js";
 
 // @desc    Post a quotation
@@ -66,7 +64,7 @@ export const requestQuotation = async (req, res) => {
     });
 
     await newQuotation.save();
-    return res.status(201).json(newQuotation);
+    res.status(201).json(newQuotation);
   } catch (error) {
     return res.status(500).json({ error: "Internal Server error" });
   }
@@ -92,7 +90,6 @@ export const allQuotationList = async (req, res) => {
     isOpen: true,
   };
 
-  // Add search criteria to matchCriteria
   if (quotation_Id) matchCriteria.quotation_Id = parseInt(quotation_Id);
   if (services) matchCriteria.services = services;
   if (roofType) matchCriteria.roofType = roofType;

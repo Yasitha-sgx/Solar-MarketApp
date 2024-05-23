@@ -3,6 +3,7 @@ import fs from "fs/promises"; // Import fs with promises API
 import { fileURLToPath } from "url";
 
 import Offer from "../models/offer.model.js";
+import { sendEmail } from "../helper/sendMail.helper.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,8 +17,9 @@ export const addOffer = async (req, res) => {
   const material = req.file.filename;
 
   const filePath = path.join(__dirname, "../../uploads", req.file.filename);
+
   try {
-    if (!quotation || !description || !price || !offerer) {
+    if (!quotation || !description || !price || !material || !offerer) {
       try {
         if (req.file) {
           await fs.unlink(filePath);
@@ -39,7 +41,107 @@ export const addOffer = async (req, res) => {
 
     await newOffer.save();
 
-    res.status(201).json({ message: "Offer added successfully" });
+    // Use the aggregation pipeline to fetch offer details, requester, and offerer
+    const result = await Offer.aggregate([
+      { $match: { _id: newOffer._id } },
+      {
+        $lookup: {
+          from: "quotations",
+          localField: "quotation",
+          foreignField: "quotation_Id",
+          as: "quotationDetails",
+        },
+      },
+      { $unwind: "$quotationDetails" },
+      {
+        $lookup: {
+          from: "users",
+          localField: "quotationDetails.requester",
+          foreignField: "_id",
+          as: "requesterDetails",
+        },
+      },
+      { $unwind: "$requesterDetails" },
+      {
+        $project: {
+          quotation: 1,
+          requesterDetails: {
+            firstName: 1,
+            lastName: 1,
+            email: 1,
+          },
+        },
+      },
+    ]);
+
+    //Send verification email
+    if (result) {
+      const emailSubject = `SolarMarket - New Offer Received for Your Request #${result[0].quotation}`;
+      const emailText = `New Offer Received for Your Request #${result[0].quotation}`;
+      const emailHtml = `<html>
+          <head>
+              <style>
+                  body {
+                      font-family: Poppins, sans-serif;
+                      background-color: #FFF8F1;
+                      margin: 0;
+                      padding: 0;
+                  }
+                  .container {
+                      max-width: 600px;
+                      margin: 50px auto;
+                      background-color: #fff;
+                      padding: 30px 50px;
+                      border: 1px solid #e5e7eb;
+                      border-radius: 8px;
+                      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+                  }
+                  h1 {
+                      color: #E45416;
+                  }
+                  p {
+                      color: #333;
+                      font-size: 16px;
+                      line-height: 1.6;
+                  }
+                  a {
+                      display: inline-block;
+                      color: #E45416 !important;
+                      text-decoration: none;
+                  }
+                  span{
+                    color:#E45416;
+                  }
+                  a:hover{
+                    color:#EE723C !important;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>New Offer Received for Your Request #${result[0].quotation}</h1>
+                  <p>Dear ${result[0].requesterDetails.firstName} ${result[0].requesterDetails.lastName},</p>
+                  <p>We are excited to inform you that you have received a new offer for the request you posted under ID #${result[0].quotation}.</p>
+                  <p>To review the details of the offer and take the next steps, please click 
+                  <a href="${process.env.PUBLIC_FRONTEND}/my-requests/#${result[0].quotation}">here</a>.</p>
+                  <p>Thank you for using our platform. We wish you the best of luck with your transaction!</p>
+                  <p>Best regards,<br/>
+                  <span>SolarMarket</span> Team</p>
+              </div>
+          </body>
+          </html>`;
+
+      await sendEmail(
+        result[0].requesterDetails.email,
+        emailSubject,
+        emailText,
+        emailHtml
+      );
+    }
+
+    res.status(201).json({
+      message: "Offer added successfully",
+    });
   } catch (error) {
     if (error.code === 11000) {
       res.status(400).json({

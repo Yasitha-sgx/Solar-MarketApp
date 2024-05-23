@@ -55,13 +55,13 @@ export const signUp = async (req, res) => {
       await newUser.save();
 
       //Send verification email
-      const emailSubject = "SolarMarket - Email Verification";
-      const emailText = `Thank you for signing up! To complete your registration.`;
+      const emailSubject = "SolarMarket - Verify Your Email Address";
+      const emailText = `Verify Your Email Address`;
       const emailHtml = `<html>
       <head>
           <style>
               body {
-                  font-family: Arial, sans-serif;
+                  font-family: Poppins, sans-serif;
                   background-color: #FFF8F1;
                   ;
                   margin: 0;
@@ -71,22 +71,22 @@ export const signUp = async (req, res) => {
                   max-width: 600px;
                   margin: 50px auto;
                   background-color: #fff;
-                  padding: 30px;
+                  padding: 30px 50px;
+                  border: 1px solid #e5e7eb;
                   border-radius: 8px;
-                  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
               }
               h1 {
                   color: #E45416;
-                  text-align: center;
               }
               p {
                   color: #333;
                   font-size: 16px;
                   line-height: 1.6;
-                  text-align: center;
+              }span{
+                color:#E45416;
               }
               .btn-container {
-                  text-align: center;
                   margin-top: 20px;
               }
               .btn {
@@ -97,16 +97,27 @@ export const signUp = async (req, res) => {
                   padding: 8px 24px 8px 24px;
                   border-radius: 37px; 
               }
+              .btn:hover{
+                background-color: #EE723C;
+              }
           </style>
       </head>
       <body>
           <div class="container">
-              <h1>Email Verification</h1>
-              <p>Thank you for signing up! To complete your registration, please click the button below to verify your email address:</p>
+              <h1>Verify Your Email Address</h1>
+              <p>Hello ${firstName} ${lastName}</p>
+              <p>Thank you for signing up!  To complete your account setup, please verify your email address by clicking the button below:</p>
               <div class="btn-container">
-                  <a href="${process.env.PUBLIC_FRONTEND}/verify/${verificationToken}" class="btn">Verify Email</a>
+                  <a href="${process.env.PUBLIC_FRONTEND}/verify/${verificationToken}" class="btn">Verify Account</a>
               </div>
-              <p>If you did not sign up for this account, you can safely ignore this email.</p>
+              <p>Once your email address is verified, you'll gain access to all the features and benefits of our platform.</p>
+              <p>For security reasons, this link will expire in 24 hours</p>
+              <p>If you did not sign up for an account with <span>SolarMarket</span> safely ignore this email.</p>
+              <p>If you have any questions or need assistance, feel free to contact our support team at ${process.env.MAIL_USER}.
+              </p>
+              <p>Thank you!</p>
+              <p>Best regards,<br/>
+              <span>SolarMarket</span> Team</p>
           </div>
       </body>
       </html>`;
@@ -248,58 +259,67 @@ export const forgotPassword = async (req, res) => {
       await user.save();
 
       //Send verification email
-      const emailSubject = "Reset Password";
-      const emailText = `Please click on the following link to reset your password: ${process.env.PUBLIC_FRONTEND}/reset-password/${resetToken}`;
+      const emailSubject = "SolarMarket - Password Reset Request";
+      const emailText = `Password Reset Request`;
       const emailHtml = `<html>
           <head>
-              <style>
-                  body {
-                      font-family: Arial, sans-serif;
-                      background-color: #FFF8F1;
-                      ;
-                      margin: 0;
-                      padding: 0;
-                  }
-                  .container {
-                      max-width: 600px;
-                      margin: 50px auto;
-                      background-color: #fff;
-                      padding: 30px;
-                      border-radius: 8px;
-                      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-                  }
-                  h1 {
-                      color: #E45416;
-                      text-align: center;
-                  }
-                  p {
-                      color: #333;
-                      font-size: 16px;
-                      line-height: 1.6;
-                      text-align: center;
-                  }
-                  .btn-container {
-                      text-align: center;
-                      margin-top: 20px;
-                  }
-                  .btn {
-                      display: inline-block;
-                      background-color: #E45416;
-                      text-decoration: none;
-                      color: #fff !important;
-                      padding: 8px 24px 8px 24px;
-                      border-radius: 37px; 
-                  }
-              </style>
+          <style>
+          body {
+              font-family: Poppins, sans-serif;
+              background-color: #FFF8F1;
+              ;
+              margin: 0;
+              padding: 0;
+          }
+          .container {
+              max-width: 600px;
+              margin: 50px auto;
+              background-color: #fff;
+              padding: 30px 50px;
+              border: 1px solid #e5e7eb;
+              border-radius: 8px;
+              box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+          }
+          h1 {
+              color: #E45416;
+          }
+          p {
+              color: #333;
+              font-size: 16px;
+              line-height: 1.6;
+          }
+          span{
+            color:#E45416;
+          }
+          .btn-container {
+              margin-top: 20px;
+          }
+          .btn {
+              display: inline-block;
+              background-color: #E45416;
+              text-decoration: none;
+              color: #fff !important;
+              padding: 8px 24px 8px 24px;
+              border-radius: 37px; 
+          }
+          .btn:hover{
+            background-color: #EE723C;
+          }
+      </style>
           </head>
           <body>
               <div class="container">
-                  <h1>Reset Your Password</h1>
-                  <p>Please click on the button below to reset your password:</p>
+                  <h1>Password Reset Request</h1>
+                  <p>Dear ${user.firstName} ${user.lastName}</p>
+                  <p>We received a request to reset your password for your <span>SolarMarket</span> account. To proceed with resetting your password, please click the button below:</p>
                   <div class="btn-container">
                       <a href="${process.env.PUBLIC_FRONTEND}/reset-password/${resetToken}" class="btn">Reset Password</a>
                   </div>
-                  <p>If you did not request to reset password, you can safely ignore this email.</p>
+                  <p>If you did not request a password reset, please safely ignore this email. Your password will remain unchanged, and no further action is required.</p>
+                  <p>For security reasons, this link will expire in 24 hours. If you encounter any issues or need further assistance, please contact our support team at ${process.env.MAIL_USER}.</p>
+                  <p>Thank you!</p>
+                  <p>Best regards,<br/>
+                  <span>SolarMarket</span> Team</p>
               </div>
           </body>
           </html>`;

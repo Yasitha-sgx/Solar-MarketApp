@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-import asyncHandler from "express-async-handler";
 
 export const sendEmail = async (to, subject, text, html) => {
   try {

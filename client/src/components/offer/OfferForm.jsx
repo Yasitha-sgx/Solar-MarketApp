@@ -103,7 +103,7 @@ const OfferForm = ({ quotation, setIsOpenOfferForm, getOfferData }) => {
   };
 
   return (
-    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff]">
+    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] shadow-md">
       <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

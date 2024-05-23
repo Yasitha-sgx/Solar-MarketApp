@@ -80,10 +80,10 @@ const UserRequestViewPage = () => {
             </div>
           </div>
           <div>
-            <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff]">
+            <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] shadow-md">
               {renderRequestDetails()}
             </div>
-            {renderOfferDetails()}
+            <div className="mt-8">{renderOfferDetails()}</div>
           </div>
         </div>
       </div>

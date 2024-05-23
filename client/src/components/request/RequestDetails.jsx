@@ -24,7 +24,7 @@ const RequestDetails = ({
   fetchOffer,
 }) => {
   return (
-    <div className=" text-[#141920]">
+    <div className=" text-[#141920] mb-10">
       <div className="flex items-center gap-4">
         <Avatar
           unstyled={true}

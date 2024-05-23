@@ -7,7 +7,7 @@ const OfferDetailsCard = ({ data }) => {
   const formattedDate = format(new Date(data?.createdAt), "dd.MM.yy hh.mm a");
 
   return (
-    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] mt-5">
+    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] shadow-md mb-8">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
           <Avatar

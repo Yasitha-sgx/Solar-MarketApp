@@ -138,7 +138,7 @@ const OfferEditForm = ({
   };
 
   return (
-    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff]">
+    <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] shadow-md">
       <div className="flex justify-between gap-3">
         <p className="text-[16px] text-[#141920] mb-4">Quotation Offer</p>
         <p className="text-[12px] text-[#545A5F]">Offered on {formattedDate}</p>

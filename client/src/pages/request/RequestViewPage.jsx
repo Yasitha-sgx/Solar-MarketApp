@@ -81,7 +81,7 @@ const RequestViewPage = () => {
               </p>
             )}
           </div>
-          <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff]">
+          <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] shadow-md">
             {isRequestLoading && <RequestDetailsSkeleton />}
             {!isRequestLoading && requestData && (
               <RequestDetails
