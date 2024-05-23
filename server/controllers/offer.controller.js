@@ -123,7 +123,7 @@ export const addOffer = async (req, res) => {
                   <p>Dear ${result[0].requesterDetails.firstName} ${result[0].requesterDetails.lastName},</p>
                   <p>We are excited to inform you that you have received a new offer for the request you posted under ID #${result[0].quotation}.</p>
                   <p>To review the details of the offer and take the next steps, please click 
-                  <a href="${process.env.PUBLIC_FRONTEND}/my-requests/#${result[0].quotation}">here</a>.</p>
+                  <a href="${process.env.PUBLIC_FRONTEND}/my-requests/${result[0].quotation}">here</a>.</p>
                   <p>Thank you for using our platform. We wish you the best of luck with your transaction!</p>
                   <p>Best regards,<br/>
                   <span>SolarMarket</span> Team</p>
