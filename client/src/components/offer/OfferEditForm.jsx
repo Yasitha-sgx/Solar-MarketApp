@@ -257,25 +257,29 @@ const OfferEditForm = ({
             </button>
           </div>
         ) : (
-          <div className="flex gap-3 mt-8">
-            <button
-              type="button"
-              className=""
-              disabled={isLoading}
-              onClick={handleOfferDelete}
-            >
-              <FaRegTrashAlt className="text-[16px] text-[#C54610]" />
-            </button>
-            <button
-              onClick={() => setIsEditable(true)}
-              type="button"
-              className=""
-            >
-              <RiEditLine className="text-[18px] text-[#1C1B1F]" />
-            </button>
-          </div>
+          data?.status === "pending" && (
+            <div className="flex gap-3 mt-8">
+              <button
+                type="button"
+                className=""
+                disabled={isLoading}
+                onClick={handleOfferDelete}
+              >
+                <FaRegTrashAlt className="text-[16px] text-[#C54610]" />
+              </button>
+              <button
+                onClick={() => setIsEditable(true)}
+                type="button"
+                className=""
+              >
+                <RiEditLine className="text-[18px] text-[#1C1B1F]" />
+              </button>
+            </div>
+          )
         )}
       </form>
+
+      <p className="text-[14px] mt-8 text-right text-[#E45416]">Accepted</p>
     </div>
   );
 };

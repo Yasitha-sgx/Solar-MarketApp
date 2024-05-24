@@ -296,7 +296,7 @@ export const acceptOffer = async (req, res) => {
         .json({ error: "You can only accept your request offers" });
     }
 
-    await Offer.updateMany({ quotation }, { $set: { status: "NotAccepted" } });
+    await Offer.updateMany({ quotation }, { $set: { status: "Not Accepted" } });
 
     offer.status = "Accepted";
     await offer.save();

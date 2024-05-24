@@ -458,6 +458,7 @@ export const getUserQuotationById = async (req, res) => {
               description: "$offers.description",
               price: "$offers.price",
               material: "$offers.material",
+              status: "$offers.status",
               createdAt: "$offers.createdAt",
             },
           },

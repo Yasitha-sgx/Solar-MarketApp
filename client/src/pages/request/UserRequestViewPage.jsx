@@ -53,7 +53,14 @@ const UserRequestViewPage = () => {
     }
     return data.offers
       .filter((offer) => Object.keys(offer).length > 0)
-      .map((offer) => <OfferDetailsCard key={offer?.offer_Id} data={offer} />);
+      .map((offer) => (
+        <OfferDetailsCard
+          key={offer?.offer_Id}
+          data={offer}
+          quotation={id}
+          refetch={refetch}
+        />
+      ));
   };
 
   return (

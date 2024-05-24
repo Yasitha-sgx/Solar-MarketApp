@@ -2,9 +2,38 @@ import Avatar from "react-avatar";
 import { FaFilePdf } from "react-icons/fa";
 import { Editor } from "@tinymce/tinymce-react";
 import { format } from "date-fns";
+import {
+  useAcceptOfferMutation,
+  useDeclineOfferMutation,
+} from "../../slices/offerApiSlice";
+import toast from "react-hot-toast";
 
-const OfferDetailsCard = ({ data }) => {
+const OfferDetailsCard = ({ data, refetch, quotation }) => {
   const formattedDate = format(new Date(data?.createdAt), "dd.MM.yy hh.mm a");
+
+  const [acceptOffer, { isLoading: acceptLoading }] = useAcceptOfferMutation();
+  const [declineOffer, { isLoading: declineLoading }] =
+    useDeclineOfferMutation();
+
+  const handleAcceptOffer = async () => {
+    try {
+      await acceptOffer({ id: data.offer_Id, data: { quotation } }).unwrap();
+      refetch();
+      toast.success("Offer Accepted");
+    } catch (error) {
+      toast.error(error?.data?.error || error.error);
+    }
+  };
+
+  const handleDeclineOffer = async () => {
+    try {
+      await declineOffer({ id: data.offer_Id, data: { quotation } }).unwrap();
+      refetch();
+      toast.success("Offer Declined");
+    } catch (error) {
+      toast.error(error?.data?.error || error.error);
+    }
+  };
 
   return (
     <div className="border border-solid border-gray-300 p-6 rounded-[16px] bg-[#ffffff] shadow-md mb-8">
@@ -49,14 +78,31 @@ const OfferDetailsCard = ({ data }) => {
           {data.material}
         </a>
       </div>
-      <div className="flex text-[14px] mt-8 gap-2">
-        <button type="submit" className="btn-fill px-[32px] py-[8px]">
-          Accept Offer
-        </button>
-        <button type="button" className="btn-outline px-[32px] py-[8px]">
-          Decline Offer
-        </button>
-      </div>
+      {data.status == "Pending" && (
+        <div className="flex text-[14px] mt-8 gap-2">
+          <button
+            type="submit"
+            className="btn-fill px-[32px] py-[8px]"
+            onClick={handleAcceptOffer}
+            disabled={acceptLoading}
+          >
+            {acceptLoading ? "Accepting..." : "Accept Offer"}
+          </button>
+          <button
+            type="button"
+            className="btn-outline px-[32px] py-[8px]"
+            onClick={handleDeclineOffer}
+            disabled={declineLoading}
+          >
+            {declineLoading ? "Loading..." : "Decline Offer"}
+          </button>
+        </div>
+      )}
+      {data.status === "Accepted" && (
+        <p className="text-[14px] mt-8 text-right text-[#E45416]">
+          Accepted offer
+        </p>
+      )}
     </div>
   );
 };

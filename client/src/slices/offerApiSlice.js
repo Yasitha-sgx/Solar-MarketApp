@@ -36,6 +36,20 @@ export const offerApiSlice = createApi({
         method: "DELETE",
       }),
     }),
+    acceptOffer: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `${OFFER_URL}/accept-offer/${id}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    declineOffer: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `${OFFER_URL}/decline-offer/${id}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -44,4 +58,6 @@ export const {
   useGetOfferMutation,
   useEditOfferMutation,
   useDeleteOfferMutation,
+  useAcceptOfferMutation,
+  useDeclineOfferMutation,
 } = offerApiSlice;
