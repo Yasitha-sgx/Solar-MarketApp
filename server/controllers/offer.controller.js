@@ -75,7 +75,7 @@ export const addOffer = async (req, res) => {
       },
     ]);
 
-    //Send verification email
+    //Send email
     if (result) {
       const emailSubject = `SolarMarket - New Offer Received for Your Request #${result[0].quotation}`;
       const emailText = `New Offer Received for Your Request #${result[0].quotation}`;

@@ -257,7 +257,7 @@ const OfferEditForm = ({
             </button>
           </div>
         ) : (
-          data?.status === "pending" && (
+          data?.status === "Pending" && (
             <div className="flex gap-3 mt-8">
               <button
                 type="button"
@@ -279,7 +279,9 @@ const OfferEditForm = ({
         )}
       </form>
 
-      <p className="text-[14px] mt-8 text-right text-[#E45416]">Accepted</p>
+      {/* <p className="text-[14px] mt-8 text-right text-[#E45416]">
+        {data?.status}
+      </p> */}
     </div>
   );
 };
