@@ -310,7 +310,10 @@ export const acceptOffer = async (req, res) => {
         .json({ error: "You can only accept your request offers" });
     }
 
-    await Offer.updateMany({ quotation }, { $set: { status: "Not Accepted" } });
+    await Offer.updateMany(
+      { quotation, status: "Pending" },
+      { $set: { status: "Not Accepted" } }
+    );
 
     offer.status = "Accepted";
     await offer.save();

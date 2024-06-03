@@ -290,6 +290,15 @@ const OfferEditForm = ({
             </div>
           )
         )}
+        {data.status === "Accepted" && (
+          <p className="text-[14px] mt-8 text-green-600">Accepted</p>
+        )}
+        {data.status === "Decline" && (
+          <p className="text-[14px] mt-8 text-red-600">Decline</p>
+        )}
+        {data.status === "Not Accepted" && (
+          <p className="text-[14px] mt-8 text-[#E45416]">Not Accepted</p>
+        )}
       </form>
 
       {/* <p className="text-[14px] mt-8 text-right text-[#E45416]">
