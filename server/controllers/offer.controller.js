@@ -148,13 +148,21 @@ export const addOffer = async (req, res) => {
       res.status(400).json({
         error: "Duplicate error: Your offer already exists",
       });
-      if (req.file) {
-        await fs.unlink(filePath);
+      try {
+        if (req.file) {
+          await fs.unlink(filePath);
+        }
+      } catch (error) {
+        console.error("Error removing uploaded file:", error);
       }
     } else {
       res.status(500).json({ error: "Internal Server error" });
-      if (req.file) {
-        await fs.unlink(filePath);
+      try {
+        if (req.file) {
+          await fs.unlink(filePath);
+        }
+      } catch (error) {
+        console.error("Error removing uploaded file:", error);
       }
     }
   }
@@ -214,7 +222,13 @@ export const deleteOffer = async (req, res) => {
 
     await Offer.findByIdAndDelete(offer._id);
 
-    await fs.unlink(filePath);
+    try {
+      if (req.file) {
+        await fs.unlink(filePath);
+      }
+    } catch (error) {
+      console.error("Error removing uploaded file:", error);
+    }
 
     res.status(200).json({ message: "Offer deleted successfully" });
   } catch (error) {

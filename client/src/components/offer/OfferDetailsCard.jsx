@@ -68,6 +68,16 @@ const OfferDetailsCard = ({ data, refetch, quotation }) => {
         }}
         disabled
       />
+      <div className="mt-5">
+        <label className="lbl-txt">Price (LKR)</label>
+        <input
+          type="number"
+          className="w-full mt-1 input"
+          id="price"
+          value={data.price}
+          disabled
+        />
+      </div>
       <div className="mt-5 px-7 py-5 bg-[#F9F9F9] rounded-lg flex flex-col gap-2">
         <FaFilePdf className="mr-2 text-[#969FA1] text-[50px]" />
         <a

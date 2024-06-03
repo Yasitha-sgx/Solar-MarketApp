@@ -12,6 +12,8 @@ import {
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RiEditLine } from "react-icons/ri";
 import { format } from "date-fns";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const OfferEditForm = ({
   data,
@@ -20,6 +22,7 @@ const OfferEditForm = ({
   getOfferData,
   setOfferData,
 }) => {
+  const { userInfo } = useSelector((state) => state.auth);
   const formattedDate = format(new Date(data?.createdAt), "dd.MM.yy hh.mm a");
   const [formData, setFormData] = useState({
     description: "",
@@ -32,7 +35,16 @@ const OfferEditForm = ({
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
+
+  const navigate = useNavigate();
+
   const quotationId = quotation;
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/login");
+    }
+  }, [userInfo, navigate]);
 
   useEffect(() => {
     if (data) {
@@ -86,40 +98,48 @@ const OfferEditForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validateOfferForm(formData, selectedFile);
-    if (Object.keys(validationErrors).length === 0) {
-      try {
-        const formDataToSend = new FormData();
-        formDataToSend.append("description", formData.description);
-        formDataToSend.append("price", formData.price);
-        if (selectedFile) {
-          formDataToSend.append("material", selectedFile);
-        }
-        await editOffer({ id: quotationId, data: formDataToSend }).unwrap();
-        getOfferData(quotation);
-        setFormData({
-          description: data.description,
-          price: data.price,
-        });
-        setSelectedFile(data.material);
-        setIsEditable(false);
-        toast.success("Offer updated successfully");
-      } catch (error) {
-        toast.error(error?.data?.error || error.error);
-      }
+    if (!userInfo) {
+      navigate("/login");
     } else {
-      setFormErrors(validationErrors);
+      const validationErrors = validateOfferForm(formData, selectedFile);
+      if (Object.keys(validationErrors).length === 0) {
+        try {
+          const formDataToSend = new FormData();
+          formDataToSend.append("description", formData.description);
+          formDataToSend.append("price", formData.price);
+          if (selectedFile) {
+            formDataToSend.append("material", selectedFile);
+          }
+          await editOffer({ id: quotationId, data: formDataToSend }).unwrap();
+          getOfferData(quotation);
+          setFormData({
+            description: data.description,
+            price: data.price,
+          });
+          setSelectedFile(data.material);
+          setIsEditable(false);
+          toast.success("Offer updated successfully");
+        } catch (error) {
+          toast.error(error?.data?.error || error.error);
+        }
+      } else {
+        setFormErrors(validationErrors);
+      }
     }
   };
 
   const handleOfferDelete = async () => {
-    try {
-      await deleteOffer(quotationId).unwrap();
-      setOfferData(null);
-      toast.success("Offer deleted successfully");
-      setFetchOffer(false);
-    } catch (error) {
-      toast.error(error?.data?.error || error.error);
+    if (!userInfo) {
+      navigate("/login");
+    } else {
+      try {
+        await deleteOffer(quotationId).unwrap();
+        setOfferData(null);
+        toast.success("Offer deleted successfully");
+        setFetchOffer(false);
+      } catch (error) {
+        toast.error(error?.data?.error || error.error);
+      }
     }
   };
 
