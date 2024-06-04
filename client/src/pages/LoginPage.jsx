@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
@@ -23,16 +23,19 @@ const LoginPage = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [login, { isLoading }] = useLoginMutation();
   const { userInfo } = useSelector((state) => state.auth);
 
+  const from = location.state?.from?.pathname || "/";
+
   useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      navigate(from);
     }
     window.scrollTo(0, 0);
-  }, [userInfo, navigate]);
+  }, [userInfo, navigate, from]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -64,7 +67,7 @@ const LoginPage = () => {
         dispatch(
           setCredentials({ id, firstName, lastName, role, isVerified, exp })
         );
-        navigate("/");
+        navigate(from);
       } catch (err) {
         toast.error(err?.data?.error || err.error);
       }

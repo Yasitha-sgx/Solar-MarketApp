@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoIosArrowDropleft } from "react-icons/io";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
 
@@ -13,8 +13,9 @@ import OfferEditForm from "../../components/offer/OfferEditForm";
 
 const RequestViewPage = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
   const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [isOpenOfferForm, setIsOpenOfferForm] = useState(false);
   const [fetchOffer, setFetchOffer] = useState(false);
@@ -25,6 +26,8 @@ const RequestViewPage = () => {
 
   const [getOffer, { isLoading: getOfferLoading }] = useGetOfferMutation();
 
+  const from = location.state?.from || "/";
+
   useEffect(() => {
     window.scrollTo(0, 0);
     getOfferData();
@@ -33,7 +36,7 @@ const RequestViewPage = () => {
     }
   }, [setFetchOffer]);
 
-  const handleGoBack = () => navigate(-1);
+  const handleGoBack = () => navigate(from);
 
   const getOfferData = async () => {
     const res = await getOffer({
@@ -45,7 +48,7 @@ const RequestViewPage = () => {
 
   const openOfferForm = async () => {
     if (!userInfo) {
-      navigate("/login");
+      navigate("/login", { state: { from: location } });
     } else {
       getOfferData(id);
       if (!getOfferLoading && offerData) {

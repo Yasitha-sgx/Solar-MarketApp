@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { validateOfferForm } from "../../utils/validations/offerFormValidations";
 import { useAddOfferMutation } from "../../slices/offerApiSlice";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const OfferForm = ({ quotation, setIsOpenOfferForm, getOfferData }) => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -22,6 +22,7 @@ const OfferForm = ({ quotation, setIsOpenOfferForm, getOfferData }) => {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -31,9 +32,9 @@ const OfferForm = ({ quotation, setIsOpenOfferForm, getOfferData }) => {
 
   useEffect(() => {
     if (!userInfo) {
-      navigate("/login");
+      navigate("/login", { state: { from: location } });
     }
-  }, [userInfo, navigate]);
+  }, [userInfo, navigate, location]);
 
   const handleAddMaterialClick = () => {
     fileInputRef.current.click();
@@ -73,34 +74,30 @@ const OfferForm = ({ quotation, setIsOpenOfferForm, getOfferData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!userInfo) {
-      navigate("/login");
-    } else {
-      const validationErrors = validateOfferForm(formData, selectedFile);
-      if (Object.keys(validationErrors).length === 0) {
-        try {
-          const formDataToSend = new FormData();
-          formDataToSend.append("quotation", quotation);
-          formDataToSend.append("description", formData.description);
-          formDataToSend.append("price", formData.price);
-          if (selectedFile) {
-            formDataToSend.append("material", selectedFile);
-          }
-          await addOffer(formDataToSend).unwrap();
-          getOfferData(quotation);
-          setFormData({
-            description: "",
-            price: "",
-          });
-          setSelectedFile(null);
-          setIsOpenOfferForm(false);
-          toast.success("Offer added successfully");
-        } catch (err) {
-          toast.error(err?.data?.error || err.error);
+    const validationErrors = validateOfferForm(formData, selectedFile);
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        const formDataToSend = new FormData();
+        formDataToSend.append("quotation", quotation);
+        formDataToSend.append("description", formData.description);
+        formDataToSend.append("price", formData.price);
+        if (selectedFile) {
+          formDataToSend.append("material", selectedFile);
         }
-      } else {
-        setFormErrors(validationErrors);
+        await addOffer(formDataToSend).unwrap();
+        getOfferData(quotation);
+        setFormData({
+          description: "",
+          price: "",
+        });
+        setSelectedFile(null);
+        setIsOpenOfferForm(false);
+        toast.success("Offer added successfully");
+      } catch (err) {
+        toast.error(err?.data?.error || err.error);
       }
+    } else {
+      setFormErrors(validationErrors);
     }
   };
 

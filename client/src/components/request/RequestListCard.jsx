@@ -9,7 +9,7 @@ import {
 import { FaBatteryEmpty } from "react-icons/fa";
 import { TbChargingPile, TbBolt } from "react-icons/tb";
 import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BsDot } from "react-icons/bs";
 
 const FeatureItem = ({ icon, text }) => (
@@ -21,13 +21,15 @@ const FeatureItem = ({ icon, text }) => (
 
 const RequestListCard = ({ data, isUser }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const formattedDate = format(new Date(data.createdAt), "dd.MM.yy hh.mm a");
 
   const handleNavigate = (id) => {
     if (isUser) {
-      navigate(`/my-requests/${id}`);
+      navigate(`/my-requests/${id}`, { state: { from: location } });
     } else {
-      navigate(`/request/${id}`);
+      navigate(`/request/${id}`, { state: { from: location } });
     }
   };
 

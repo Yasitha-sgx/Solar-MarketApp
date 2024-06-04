@@ -44,14 +44,14 @@ const MyRequestPage = () => {
 
   useEffect(() => {
     if (!userInfo) {
-      navigate("/login");
+      navigate("/login", { state: { from: location } });
     } else if (userInfo.role !== "buyer") {
       navigate("/");
     } else {
       updateVisiblePages(currentPage, totalPages);
       window.scrollTo(0, 0);
     }
-  }, [currentPage, totalPages, userInfo, navigate]);
+  }, [currentPage, totalPages, userInfo, navigate, location]);
 
   const updateVisiblePages = (page, total) => {
     let pages = [];

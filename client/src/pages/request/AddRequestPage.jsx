@@ -1,5 +1,5 @@
 import { IoIosArrowDropleft } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
@@ -8,16 +8,19 @@ import RequestFormLayout from "../../components/request/RequestFormLayout";
 const AddRequestPage = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
     if (!userInfo) {
-      navigate("/login");
+      navigate("/login", { state: { from: location } });
     } else if (userInfo.role !== "buyer") {
       navigate("/");
     } else {
       window.scrollTo(0, 0);
     }
-  }, [userInfo, navigate]);
+  }, [userInfo, navigate, location]);
 
   return (
     <div className="min-h-screen">
@@ -25,7 +28,10 @@ const AddRequestPage = () => {
       <div className="flex flex-col items-center w-full ">
         <div className="flex flex-col w-full max-w-screen-lg gap-8 -mt-[160px] mb-[70px] p-8 sm:p-8">
           <div className="flex items-center gap-5 text-left">
-            <Link to={-1} className="text-[#EE723C] text-[36px]">
+            <Link
+              to={{ pathname: from }}
+              className="text-[#EE723C] text-[36px]"
+            >
               <IoIosArrowDropleft />
             </Link>
             <h1 className="text-2xl font-semibold">Request Free Quotation</h1>

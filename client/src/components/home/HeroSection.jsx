@@ -1,12 +1,14 @@
 import { IoIosArrowForward } from "react-icons/io";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import HeadingOne from "../HeadingOne";
 import HeadingTwo from "../HeadingTwo";
 
 const HeroSection = () => {
   const { userInfo } = useSelector((state) => state.auth);
+  const location = useLocation();
+
   return (
     <div className="flex flex-col items-center justify-center max-w-screen-lg gap-16 px-8 py-10 mx-auto md:py-32 md:flex-row md:gap-16 lg:gap-20">
       <div className="text-center md:w-1/2 md:text-left">
@@ -24,14 +26,20 @@ const HeroSection = () => {
         <div className="flex items-center justify-center md:justify-start">
           {userInfo && userInfo.role !== "buyer" ? (
             <Link
-              to="/request"
+              to={{
+                pathname: "/request",
+                state: { from: location.pathname },
+              }}
               className="flex items-center gap-3 px-8 py-3 btn-fill hover:text-white"
             >
               Browse Requests <IoIosArrowForward />
             </Link>
           ) : (
             <Link
-              to="/request-quotation"
+              to={{
+                pathname: "/request-quotation",
+                state: { from: location.pathname },
+              }}
               className="flex items-center gap-3 px-8 py-3 btn-fill hover:text-white"
             >
               Request Quotation <IoIosArrowForward />
