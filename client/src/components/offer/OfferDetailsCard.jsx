@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Avatar from "react-avatar";
 import { FaFilePdf } from "react-icons/fa";
 import { Editor } from "@tinymce/tinymce-react";
@@ -7,6 +8,7 @@ import {
   useDeclineOfferMutation,
 } from "../../slices/offerApiSlice";
 import toast from "react-hot-toast";
+import ConfirmationModal from "../ConfirmationModal"; // Import the modal
 
 const OfferDetailsCard = ({ data, refetch, quotation }) => {
   const formattedDate = format(new Date(data?.createdAt), "dd.MM.yy hh.mm a");
@@ -14,6 +16,9 @@ const OfferDetailsCard = ({ data, refetch, quotation }) => {
   const [acceptOffer, { isLoading: acceptLoading }] = useAcceptOfferMutation();
   const [declineOffer, { isLoading: declineLoading }] =
     useDeclineOfferMutation();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalAction, setModalAction] = useState(null);
 
   const handleAcceptOffer = async () => {
     try {
@@ -33,6 +38,20 @@ const OfferDetailsCard = ({ data, refetch, quotation }) => {
     } catch (error) {
       toast.error(error?.data?.error || error.error);
     }
+  };
+
+  const handleOpenModal = (action) => {
+    setModalAction(action);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmAction = () => {
+    if (modalAction === "accept") {
+      handleAcceptOffer();
+    } else if (modalAction === "decline") {
+      handleDeclineOffer();
+    }
+    setIsModalOpen(false);
   };
 
   return (
@@ -88,12 +107,12 @@ const OfferDetailsCard = ({ data, refetch, quotation }) => {
           {data.material}
         </a>
       </div>
-      {data.status == "Pending" && (
+      {data.status === "Pending" && (
         <div className="flex text-[14px] mt-8 gap-2">
           <button
             type="submit"
             className="btn-fill px-[32px] py-[8px]"
-            onClick={handleAcceptOffer}
+            onClick={() => handleOpenModal("accept")}
             disabled={acceptLoading}
           >
             {acceptLoading ? "Accepting..." : "Accept Offer"}
@@ -101,7 +120,7 @@ const OfferDetailsCard = ({ data, refetch, quotation }) => {
           <button
             type="button"
             className="btn-outline px-[32px] py-[8px]"
-            onClick={handleDeclineOffer}
+            onClick={() => handleOpenModal("decline")}
             disabled={declineLoading}
           >
             {declineLoading ? "Loading..." : "Decline Offer"}
@@ -117,6 +136,14 @@ const OfferDetailsCard = ({ data, refetch, quotation }) => {
       {data.status === "Not Accepted" && (
         <p className="text-[14px] mt-8 text-[#E45416]">Not Accepted</p>
       )}
+      <ConfirmationModal
+        show={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmAction}
+        message={`Are you sure you want to ${
+          modalAction === "accept" ? "accept" : "decline"
+        } this offer?`}
+      />
     </div>
   );
 };

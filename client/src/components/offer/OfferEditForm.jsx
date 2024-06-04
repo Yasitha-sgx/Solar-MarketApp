@@ -14,7 +14,7 @@ import { RiEditLine } from "react-icons/ri";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import ConfirmationModal from "../ConfirmationModal";
 const OfferEditForm = ({
   data,
   quotation,
@@ -35,6 +35,7 @@ const OfferEditForm = ({
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -134,6 +135,10 @@ const OfferEditForm = ({
     } catch (error) {
       toast.error(error?.data?.error || error.error);
     }
+  };
+
+  const handleDeleteConfirmation = () => {
+    setIsModalOpen(true); // Open the modal
   };
 
   const handleCancel = () => {
@@ -269,7 +274,7 @@ const OfferEditForm = ({
                 type="button"
                 className=""
                 disabled={isLoading}
-                onClick={handleOfferDelete}
+                onClick={handleDeleteConfirmation}
               >
                 <FaRegTrashAlt className="text-[16px] text-[#C54610]" />
               </button>
@@ -293,10 +298,12 @@ const OfferEditForm = ({
           <p className="text-[14px] mt-8 text-[#E45416]">Not Accepted</p>
         )}
       </form>
-
-      {/* <p className="text-[14px] mt-8 text-right text-[#E45416]">
-        {data?.status}
-      </p> */}
+      <ConfirmationModal
+        show={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleOfferDelete}
+        message="Are you sure you want to delete this offer?"
+      />
     </div>
   );
 };

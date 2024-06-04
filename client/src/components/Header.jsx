@@ -76,7 +76,7 @@ const Header = () => {
   const handleDWClick = () => setIsDWOpen(!isDWOpen);
 
   return (
-    <header className="sticky top-0 z-10 shadow-md bg-[#ffffff] w-full">
+    <header className="sticky top-0 z-20 shadow-md bg-[#ffffff] w-full">
       {/* Desktop Menu */}
       <nav className="items-center justify-between text-sm w-full max-w-screen-xl p-8 px-8 h-[50px] py-8 hidden md:flex mx-auto">
         <div className="flex items-center md:gap-12 lg:gap-20">
