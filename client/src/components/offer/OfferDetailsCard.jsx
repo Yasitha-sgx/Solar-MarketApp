@@ -8,7 +8,7 @@ import {
   useDeclineOfferMutation,
 } from "../../slices/offerApiSlice";
 import toast from "react-hot-toast";
-import ConfirmationModal from "../ConfirmationModal"; // Import the modal
+import ConfirmationModal from "../ConfirmationModal";
 
 const OfferDetailsCard = ({ data, refetch, quotation }) => {
   const formattedDate = format(new Date(data?.createdAt), "dd.MM.yy hh.mm a");
