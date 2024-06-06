@@ -6,7 +6,7 @@ import { partnersData } from "../../constants/partners";
 
 const PartnerSection = () => {
   return (
-    <div className="flex flex-col gap-16 py-32">
+    <div className="flex flex-col max-w-screen-xl gap-16 px-8 py-32 mx-auto">
       {/* Text Section */}
       <div className="max-w-screen-lg mx-auto text-center ">
         <HeadingTwo text="Our Trusted Partners" />
@@ -20,7 +20,7 @@ const PartnerSection = () => {
       </div>
 
       {/* Brand Slider */}
-      <div className="max-w-screen-xl px-8 mx-auto">
+      <div className="mx-auto sm:mx-0">
         <BrandCarousel partnersData={partnersData} />
       </div>
     </div>
