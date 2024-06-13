@@ -17,6 +17,7 @@ const BlogPage = () => {
   const initialPage = parseInt(query.get("page")) || 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [localIsLoading, setLocalIsLoading] = useState(true);
+  const [isMobileScreen, setIsMobileScreen] = useState(false);
 
   // Fetching blogs data
   const { data, isLoading, error, refetch } = useGetAllBlogsQuery({
@@ -32,6 +33,16 @@ const BlogPage = () => {
     }
     window.scrollTo(0, 0);
   }, [isLoading, error]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth < 640);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Extracting data and pagination information
   const blogs = data?.data || [];
@@ -124,6 +135,8 @@ const BlogPage = () => {
                   <BlogCardsSkeleton />
                 </div>
               ))
+            : isMobileScreen
+            ? blogs.map((item) => <BlogCards key={item.id} blogs={item} />)
             : initialPage === 1
             ? blogs
                 .slice(1)

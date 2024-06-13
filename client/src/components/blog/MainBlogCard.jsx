@@ -34,6 +34,7 @@ const MainBlogCard = ({ blog }) => {
             "Blog Image"
           }
           className="rounded-s-[8px] aspect-[5/3] h-full w-full max-h-[394px] object-cover"
+          loading="lazy"
         />
       </div>
       <div className="md:col-span-3 flex flex-col justify-center gap-3 px-8 py-4 md:max-w-[440px] mx-auto">

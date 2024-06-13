@@ -30,6 +30,7 @@ const BlogCards = ({ blogs }) => {
         }`}
         alt=""
         className="aspect-[4/3] h-full max-h-[253px] object-cover rounded-t-[8px]"
+        loading="lazy"
       />
       <div className="flex flex-col gap-2 px-5 py-3">
         <div className="flex gap-2 text-[14px]">
