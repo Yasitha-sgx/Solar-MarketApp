@@ -26,7 +26,7 @@ const RequestViewPage = () => {
 
   const [getOffer, { isLoading: getOfferLoading }] = useGetOfferMutation();
 
-  const from = location.state?.from || "/";
+  const from = location.state?.from || "/request";
 
   useEffect(() => {
     window.scrollTo(0, 0);

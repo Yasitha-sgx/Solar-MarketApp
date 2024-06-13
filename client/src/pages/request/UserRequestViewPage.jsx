@@ -17,7 +17,7 @@ const UserRequestViewPage = () => {
 
   const { data, isLoading, refetch } = useGetUserRequestQuotationByIdQuery(id);
 
-  const from = location.state?.from || "/";
+  const from = location.state?.from || "/my-requests";
 
   const handleGoBack = () => {
     navigate(from);

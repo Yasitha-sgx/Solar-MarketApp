@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const baseQuery = fetchBaseQuery({ baseUrl: import.meta.VITE_SERVER_URL });
+const baseQuery = fetchBaseQuery("");
 
 const REQUEST_URL = "/api/quotations";
 

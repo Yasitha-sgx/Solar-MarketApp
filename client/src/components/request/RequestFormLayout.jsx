@@ -48,7 +48,7 @@ const RequestFormLayout = () => {
       try {
         await createRequest(formData).unwrap();
         toast.success("Quotation successfully created!");
-        navigate("/request");
+        navigate("/my-requests");
       } catch (err) {
         toast.error(err?.data?.error || err.error);
       }

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import toast from "react-hot-toast";
 
 import RequestListCard from "../../components/request/RequestListCard";
 import { useGetUserRequestQuotationQuery } from "../../slices/requestApiSlice";
 import RequestListCardSkeleton from "../../components/request/RequestListCardSkeleton";
 import { useSelector } from "react-redux";
+import Pagination from "../../components/Pagination";
 
 const MyRequestPage = () => {
   const limit = 15;
@@ -145,15 +145,15 @@ const MyRequestPage = () => {
             </p>
 
             {localIsLoading && (
-              <div className="flex flex-col w-full max-w-screen-lg gap-5">
+              <div className="flex flex-col w-full gap-5">
                 {Array.from({ length: 15 }).map((_, index) => (
                   <RequestListCardSkeleton key={index} />
                 ))}
               </div>
             )}
 
-            {!localIsLoading && quotations.length > 0 ? (
-              <div className="flex flex-col w-full max-w-screen-lg gap-5">
+            {quotations.length > 0 ? (
+              <div className="flex flex-col w-full gap-5">
                 {quotations.map((quotation) => (
                   <RequestListCard
                     key={quotation.quotation_Id}
@@ -163,48 +163,17 @@ const MyRequestPage = () => {
                 ))}
               </div>
             ) : (
-              <div className="w-full max-w-screen-lg px-6">
-                No Result Found!
-              </div>
+              <div className="w-full px-6">No Result Found!</div>
             )}
 
             {/* Pagination */}
             {quotations.length > 0 && (
-              <div className="flex flex-col items-center gap-8 mt-8 mb-6 sm:flex-row sm:justify-between">
-                <div className="text-[15px] flex items-center gap-2 flex-wrap justify-center">
-                  <button
-                    className="p-[8px]  min-w-[40px] h-[40px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    <MdKeyboardArrowLeft />
-                  </button>
-                  {visiblePages.map((page) => (
-                    <button
-                      key={page}
-                      className={`p-[8px]  min-w-[40px] h-[40px] rounded-sm shadow-md ${
-                        currentPage === page
-                          ? "bg-[#E45416] text-[#ffffff]"
-                          : "text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]"
-                      }  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]`}
-                      onClick={() => handlePageChange(page)}
-                      disabled={page === "..."}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                  <button
-                    className="p-[8px]  min-w-[40px] h-[40px] rounded-sm shadow-md text-[#E45416] hover:bg-[#E45416] hover:text-[#ffffff]  flex items-center justify-center font[500] disabled:hover:bg-[#ffffff] disabled:hover:text-[#E45416]"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    <MdKeyboardArrowRight />
-                  </button>
-                </div>
-                <p className="text-[#545A5F] text-[12px]">
-                  Page {currentPage} of {totalPages}
-                </p>
-              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                visiblePages={visiblePages}
+                onPageChange={handlePageChange}
+              />
             )}
           </div>
         </div>
