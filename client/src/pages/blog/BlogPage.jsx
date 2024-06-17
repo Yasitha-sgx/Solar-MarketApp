@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGetAllBlogsQuery } from "../slices/blogApiSlice";
+import { useGetAllBlogsQuery } from "../../slices/blogApiSlice";
 import toast from "react-hot-toast";
-import BlogCards from "../components/blog/BlogCards";
-import MainBlogCard from "../components/blog/MainBlogCard";
-import MainBlogCardSkeleton from "../components/blog/MainBlogCardSkeleton";
-import BlogCardsSkeleton from "../components/blog/BlogCardsSkeleton";
-import Pagination from "../components/Pagination";
+import BlogCards from "../../components/blog/BlogCards";
+import MainBlogCard from "../../components/blog/MainBlogCard";
+import MainBlogCardSkeleton from "../../components/blog/MainBlogCardSkeleton";
+import BlogCardsSkeleton from "../../components/blog/BlogCardsSkeleton";
+import Pagination from "../../components/Pagination";
 
 const BlogPage = () => {
   // Constants and States

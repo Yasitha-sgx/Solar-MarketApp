@@ -1,8 +1,12 @@
 import Avatar from "react-avatar";
 import { format } from "date-fns";
 import { estimateReadingTime } from "../../utils/textReadingTime";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const BlogCards = ({ blogs }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // Find the first paragraph from the content
   const firstParagraph = blogs?.attributes?.content?.find(
     (item) => item.type === "paragraph" && item.children.length > 0
@@ -22,11 +26,18 @@ const BlogCards = ({ blogs }) => {
     "MMMM dd, yyyy"
   );
 
+  const handleNavigate = (id) => {
+    navigate(`/blog/${id}`, { state: { from: location } });
+  };
+
   return (
-    <div className="flex flex-col gap-3 rounded-[8px] bg-white border-[1px] cursor-pointer shadow-lg">
+    <div
+      className="flex flex-col gap-3 rounded-[8px] bg-white border-[1px] cursor-pointer shadow-lg"
+      onClick={() => handleNavigate(blogs.attributes.slug)}
+    >
       <img
         src={`${import.meta.env.VITE_STRAPI_URL}${
-          blogs.attributes.image.data.attributes.formats.small.url
+          blogs.attributes.image.data.attributes.url
         }`}
         alt=""
         className="aspect-[4/3] h-full max-h-[253px] object-cover rounded-t-[8px]"
@@ -47,11 +58,13 @@ const BlogCards = ({ blogs }) => {
         </p>
         <div className="flex justify-between text-[#8A8A8A] text-[14px] items-center gap-3">
           <div className="flex items-center gap-2">
-            <Avatar
-              unstyled={true}
-              name={blogs.attributes.author}
-              className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full bg-[#FFF8F1]"
-            />
+            <div className="bg-[#FFF4EF] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+              <Avatar
+                unstyled={true}
+                name={blogs.attributes.author}
+                className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full"
+              />
+            </div>
             <p>{blogs.attributes.author}</p>
           </div>
           <p>{formattedDate}</p>

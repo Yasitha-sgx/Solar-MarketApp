@@ -17,7 +17,13 @@ export const blogApiSlice = createApi({
         method: "GET",
       }),
     }),
+    getBlog: builder.query({
+      query: (id) => ({
+        url: `${BLOG_URL}/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetAllBlogsQuery } = blogApiSlice;
+export const { useGetAllBlogsQuery, useGetBlogQuery } = blogApiSlice;

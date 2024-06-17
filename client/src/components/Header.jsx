@@ -109,11 +109,13 @@ const Header = () => {
               ref={dWRef}
             >
               <div className="relative text-[14px] text-[#141920] font-[500] items-center gap-[20px] flex">
-                <Avatar
-                  unstyled={true}
-                  name={`${userInfo.firstName} ${userInfo.lastName}`}
-                  className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full bg-[#FFF8F1]"
-                />
+                <div className="bg-[#FFF4EF] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+                  <Avatar
+                    unstyled={true}
+                    name={`${userInfo.firstName} ${userInfo.lastName}`}
+                    className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full"
+                  />
+                </div>
                 <div>
                   <div>{userInfo.firstName}</div>
                   <div>{userInfo.lastName}</div>

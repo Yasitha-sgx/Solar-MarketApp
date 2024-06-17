@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
-import BlogPage from "./pages/BlogPage";
+import BlogPage from "./pages/blog/BlogPage";
 import RequestPage from "./pages/request/RequestPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -16,6 +16,7 @@ import RequestViewPage from "./pages/request/RequestViewPage";
 import MyRequestPage from "./pages/request/MyRequestPage";
 import UserRequestViewPage from "./pages/request/UserRequestViewPage";
 import { useTokenExpirationCheck } from "./utils/authUtils.js";
+import BlogViewPage from "./pages/blog/BlogViewPage.jsx";
 
 const App = () => {
   useTokenExpirationCheck();
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:id" element={<BlogViewPage />} />
           <Route path="/request" element={<RequestPage />} />
           <Route path="/my-requests" element={<MyRequestPage />} />
           <Route path="/request-quotation" element={<AddRequestPage />} />

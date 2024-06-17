@@ -60,11 +60,13 @@ const RequestListCard = ({ data, isUser }) => {
     >
       <div className="flex justify-between w-full">
         <div className="flex items-center gap-4">
-          <Avatar
-            unstyled={true}
-            name={`${data.requester.requesterFirstName} ${data.requester.requesterLastName}`}
-            className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full bg-[#FFF8F1]"
-          />
+          <div className="bg-[#FFF4EF] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+            <Avatar
+              unstyled={true}
+              name={`${data.requester.requesterFirstName} ${data.requester.requesterLastName}`}
+              className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full"
+            />
+          </div>
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1 md:flex-row sm:gap-3">
               <h3 className="text-[16px] text-[#141920]">

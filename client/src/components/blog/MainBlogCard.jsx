@@ -1,8 +1,12 @@
 import Avatar from "react-avatar";
 import { format } from "date-fns";
 import { estimateReadingTime } from "../../utils/textReadingTime";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const MainBlogCard = ({ blog }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // Find the first paragraph from the content
   const firstParagraph = blog?.attributes?.content?.find(
     (item) => item.type === "paragraph" && item.children.length > 0
@@ -22,12 +26,19 @@ const MainBlogCard = ({ blog }) => {
     "MMMM dd, yyyy"
   );
 
+  const handleNavigate = (id) => {
+    navigate(`/blog/${id}`, { state: { from: location } });
+  };
+
   return (
-    <div className="hidden sm:grid grid-cols-2 md:grid-cols-7 rounded-[8px] bg-white border-[1px] shadow-lg cursor-pointer">
+    <div
+      className="hidden sm:grid grid-cols-2 md:grid-cols-7 rounded-[8px] bg-white border-[1px] shadow-lg cursor-pointer"
+      onClick={() => handleNavigate(blog.attributes.slug)}
+    >
       <div className="md:col-span-4">
         <img
           src={`${import.meta.env.VITE_STRAPI_URL}${
-            blog.attributes.image.data.attributes.formats.small.url
+            blog.attributes.image.data.attributes.url
           }`}
           alt={
             blog.attributes.image.data.attributes.alternativeText ||
@@ -50,11 +61,13 @@ const MainBlogCard = ({ blog }) => {
         </p>
         <div className="flex justify-between text-[#8A8A8A] text-[14px] items-center mt-6">
           <div className="flex items-center gap-2">
-            <Avatar
-              unstyled={true}
-              name={blog.attributes.author}
-              className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full bg-[#FFF8F1]"
-            />
+            <div className="bg-[#FFF4EF] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+              <Avatar
+                unstyled={true}
+                name={blog.attributes.author}
+                className="text-[16px] text-[#E45416] font-[500] p-[5px] rounded-full"
+              />
+            </div>
             <p>{blog.attributes.author}</p>
           </div>
           <p>{formattedDate}</p>

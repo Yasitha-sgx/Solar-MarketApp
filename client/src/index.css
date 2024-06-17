@@ -69,3 +69,118 @@ a.active {
 .rqt-frm-select {
   @apply px-[12px] py-[9px] rounded-[4px] border-[1px] border-[#CEDBF0] text-[14px] cursor-pointer;
 }
+
+/*Strapi block render*/
+.custom-content img {
+  @apply aspect-[5/3] max-h-[433px] w-full object-cover rounded-[8px];
+}
+
+/* Headers */
+.custom-content h1 {
+  @apply mb-8 text-4xl font-bold text-gray-800;
+}
+
+.custom-content h2 {
+  @apply mb-8 text-3xl font-bold text-gray-800;
+}
+
+.custom-content h3 {
+  @apply mb-6 text-2xl font-bold text-gray-800;
+}
+
+.custom-content h4 {
+  @apply mb-4 text-xl font-bold text-gray-800;
+}
+
+article.rich-text h5 {
+  @apply mb-4 text-lg font-bold text-gray-800;
+}
+
+.custom-content h6 {
+  @apply mb-4 text-base font-bold text-gray-800;
+}
+
+/* Horizontal rules */
+.custom-content hr {
+  @apply my-8 text-gray-800;
+}
+
+.custom-content a {
+  @apply text-xl leading-relaxed text-gray-900 underline;
+}
+
+/* Typographic replacements */
+.custom-content p {
+  @apply mb-4 leading-relaxed text-justify text-gray-700;
+}
+
+/* Emphasis */
+.custom-content strong {
+  @apply font-bold leading-relaxed;
+}
+
+.custom-content em {
+  @apply italic leading-relaxed;
+}
+
+.custom-content del {
+  @apply leading-relaxed line-through;
+}
+
+/* Blockquotes */
+.custom-content blockquote {
+  @apply py-2 pl-4 mb-4 border-l-4 border-gray-400;
+}
+
+/* Lists */
+.custom-content ul {
+  @apply pl-4 mb-4 text-gray-800 list-disc list-inside;
+}
+
+.custom-content ol {
+  @apply pl-4 mb-4 text-gray-800 list-decimal list-inside;
+}
+
+.custom-content li {
+  @apply mb-2 text-gray-800;
+}
+
+.custom-content li > ul {
+  @apply pl-4 mb-2 list-disc;
+}
+
+article.rich-text li > ol {
+  @apply pl-4 mb-2 list-decimal;
+}
+
+/* Code blocks */
+.custom-content pre {
+  @apply p-4 my-6 font-mono text-gray-800 rounded;
+}
+
+.custom-content code {
+  @apply px-2 py-1 font-mono text-gray-800 rounded;
+}
+
+/* Tables */
+article .rich-text table {
+  @apply w-full my-6 text-gray-800 border-collapse;
+}
+
+article .rich-text th {
+  @apply px-4 py-2 font-semibold text-left text-gray-800 border-b;
+}
+
+article .rich-text td {
+  @apply px-4 py-2 text-gray-800 border-b;
+}
+
+/* Images */
+article .rich-text img {
+  @apply object-cover w-full my-6 rounded-xl;
+}
+
+/* Custom containers */
+article .rich-text .warning {
+  @apply px-4 py-2 mb-4 text-yellow-700 bg-yellow-100 border-yellow-500 rounded-lg;
+}
